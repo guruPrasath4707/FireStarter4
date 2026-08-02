@@ -1,0 +1,13 @@
+/* Tailwind v4 single import (no PostCSS config needed) */
+@import "tailwindcss";
+
+/* Optional app styles */
+:root { --brand-600: #2563eb; }
+body {
+  background-image: linear-gradient(180deg, #f8fbff, #ffffff);
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.card { @apply rounded-2xl border border-slate-200 bg-white shadow; }
+.soft { @apply rounded-xl border border-blue-100 bg-blue-50; }
