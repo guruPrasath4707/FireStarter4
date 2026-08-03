@@ -1,17 +1,41 @@
+FireStarter4
 
-# Firebase Auth Starter (React + Vite)
+🚀 Modern full-stack web application built using React, Vite, and Node.js.
 
-Fully wired with **Firebase Email/Password Auth**, using your UI and pages.
+Features
+• Responsive UI
+• Authentication
+• Fast routing
+• Clean component architecture
+• Modern frontend
 
-## Quick start
-1) Create `.env` with Firebase keys (see `.env.example`).
-2) `npm i`
-3) `npm run dev`
+Tech Stack
+• React
+• Vite
+• JavaScript
+• Node.js
+• Express
+• CSS
 
-## Environment variables (Vite)
-VITE_FIREBASE_API_KEY=...
-VITE_FIREBASE_AUTH_DOMAIN=...
-VITE_FIREBASE_PROJECT_ID=...
-VITE_FIREBASE_STORAGE_BUCKET=...
-VITE_FIREBASE_MESSAGING_SENDER_ID=...
-VITE_FIREBASE_APP_ID=...
+Project Structure
+src/
+components/
+pages/
+assets/
+public/
+
+Installation
+
+git clone ...
+npm install
+npm run dev
+
+Screenshots
+
+(Add screenshots)
+
+Future Improvements
+
+Contributing
+
+License
