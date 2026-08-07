@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { AppShell } from '../components/shell/AppShell';
-import { ProtectedRoute } from '../components/shell/ProtectedRoute';
+import { AppLayout } from '../layouts/AppLayout';
+import { ProtectedRoute } from '../layouts/ProtectedRoute';
 
 import LandingPage from '../pages/public/LandingPage';
 import Login from '../pages/auth/Login';
@@ -39,7 +39,7 @@ export function AppRoutes() {
       <Route
         element={
           <ProtectedRoute>
-            <AppShell />
+            <AppLayout />
           </ProtectedRoute>
         }
       >
