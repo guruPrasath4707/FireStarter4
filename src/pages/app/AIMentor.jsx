@@ -7,8 +7,7 @@ export default function AIMentor() {
     <Placeholder
       icon={Bot}
       title="AI Mentor"
-      description="Ask anything — your goals, next steps, or how to learn something."
-      tone="violet"
+      subtitle="Ask anything — your goals, next steps, or how to learn something."
     />
   );
 }

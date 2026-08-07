@@ -7,7 +7,7 @@ export default function Scholarships() {
     <Placeholder
       icon={GraduationCap}
       title="Scholarships"
-      description="Curated, eligibility-aware scholarships for your profile."
+      subtitle="Curated, eligibility-aware scholarships for your profile."
     />
   );
 }

@@ -1,8 +1,21 @@
 import React from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { Card, CardBody, CardHeader, CardTitle, CardDescription, Badge, Progress, Button } from '../../components/ui';
-import { Compass, BookOpen, ClipboardCheck, Bot, ArrowRight, Sparkles, CalendarDays } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import {
+  Sparkles,
+  ArrowRight,
+  CalendarDays,
+  Compass,
+  BookOpen,
+  ClipboardCheck,
+  Bot,
+} from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { Button } from '../../design-system/Button';
+import { Card, CardBody, CardHeader, CardTitle, CardDescription } from '../../design-system/Card';
+import { Badge } from '../../design-system/Badge';
+import { Progress } from '../../design-system/Progress';
+import { PageHeader, Section, Stat } from '../../components/layout/PageHeader';
+import { EmptyState } from '../../components/layout/EmptyState';
 
 export default function Dashboard() {
   const { profile, onboarding } = useAuth();
@@ -14,22 +27,23 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Welcome back, {firstName}.</h1>
-          <p className="mt-1 text-slate-500">Here's a snapshot of your path today.</p>
-        </div>
-        <Link to="/assessments">
-          <Button variant="gradient">
-            <Sparkles size={16} /> Start an assessment
-          </Button>
-        </Link>
-      </div>
+      <PageHeader
+        eyebrow="Today"
+        title={`Welcome back, ${firstName}.`}
+        subtitle="Here's a snapshot of your path."
+        actions={
+          <Link to="/assessments">
+            <Button variant="brand" leftIcon={Sparkles}>
+              Start an assessment
+            </Button>
+          </Link>
+        }
+      />
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Stat label="Daily goal" value={`${studyMinutes} min`} hint="Stay consistent" />
-        <Stat label="Interests" value={interests.length} hint="Curated for you" />
-        <Stat label="Streak" value="0 days" hint="Build the habit" />
+        <Stat label="Daily goal" value={`${studyMinutes} min`} hint="Stay consistent" tone="brand" />
+        <Stat label="Interests" value={interests.length} hint="Curated for you" tone="violet" />
+        <Stat label="Streak" value="0 days" hint="Build the habit" tone="success" />
         <Stat label="Progress" value="0%" hint="Across your path" />
       </div>
 
@@ -46,12 +60,11 @@ export default function Dashboard() {
             <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">
               {goal}
             </div>
-            <div className="mt-4">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-600">Profile completeness</span>
-                <span className="font-medium text-slate-900">{interests.length ? 72 : 28}%</span>
-              </div>
-              <div className="mt-2"><Progress value={interests.length ? 72 : 28} /></div>
+            <div className="mt-5">
+              <Progress
+                value={interests.length ? 72 : 28}
+                label="Profile completeness"
+              />
             </div>
           </CardBody>
         </Card>
@@ -68,7 +81,11 @@ export default function Dashboard() {
               { icon: BookOpen,       t: 'Read one recommended module',     to: '/learning' },
               { icon: Bot,            t: 'Ask the AI mentor a question',    to: '/mentor' },
             ].map(({ icon: Icon, t, to }, i) => (
-              <Link key={i} to={to} className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5 hover:bg-slate-50">
+              <Link
+                key={i}
+                to={to}
+                className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5 hover:bg-slate-50 transition-colors"
+              >
                 <div className="h-9 w-9 rounded-lg bg-slate-100 text-slate-700 grid place-items-center">
                   <Icon size={16} />
                 </div>
@@ -80,36 +97,21 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>
-              <span className="inline-flex items-center gap-2">
-                <CalendarDays size={18} className="text-slate-500" /> Upcoming
-              </span>
-            </CardTitle>
-            <Badge>Phase 1</Badge>
-          </div>
-          <CardDescription>No live events yet — these populate as you go.</CardDescription>
-        </CardHeader>
-        <CardBody>
-          <div className="rounded-xl border border-dashed border-slate-200 px-4 py-8 text-center text-sm text-slate-500">
-            Your timeline will appear here once you start activities.
-          </div>
-        </CardBody>
-      </Card>
+      <Section
+        title="Upcoming"
+        subtitle="No live events yet — these populate as you go."
+        action={<Badge>Phase 1</Badge>}
+      >
+        <Card>
+          <CardBody>
+            <EmptyState
+              icon={CalendarDays}
+              title="Your timeline will appear here"
+              description="Deadlines, mentor nudges, and assessment reminders will live in this space."
+            />
+          </CardBody>
+        </Card>
+      </Section>
     </div>
-  );
-}
-
-function Stat({ label, value, hint }) {
-  return (
-    <Card>
-      <CardBody className="p-5">
-        <div className="text-xs uppercase tracking-wide text-slate-500">{label}</div>
-        <div className="mt-1 text-2xl font-semibold text-slate-900">{value}</div>
-        {hint ? <div className="mt-1 text-xs text-slate-500">{hint}</div> : null}
-      </CardBody>
-    </Card>
   );
 }

@@ -7,7 +7,7 @@ export default function Opportunities() {
     <Placeholder
       icon={Briefcase}
       title="Opportunities"
-      description="Internships, programs, and competitions matched to you."
+      subtitle="Internships, programs, and competitions matched to you."
     />
   );
 }

@@ -7,7 +7,7 @@ export default function LearningHub() {
     <Placeholder
       icon={BookOpen}
       title="Learning Hub"
-      description="Modules, lessons, and resources tailored to your path."
+      subtitle="Modules, lessons, and resources tailored to your path."
     />
   );
 }

@@ -7,7 +7,7 @@ export default function CareerExplorer() {
     <Placeholder
       icon={Compass}
       title="Career Explorer"
-      description="Personalized career tracks aligned to your interests and goals."
+      subtitle="Personalized career tracks aligned to your interests and goals."
     />
   );
 }

@@ -7,7 +7,7 @@ export default function Assessments() {
     <Placeholder
       icon={ClipboardCheck}
       title="Assessments"
-      description="Adaptive tests that reveal where you are and what to learn next."
+      subtitle="Adaptive tests that reveal where you are and what to learn next."
     />
   );
 }

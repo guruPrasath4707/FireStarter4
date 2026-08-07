@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Card, CardBody, CardHeader, CardTitle, CardDescription, Field, Input, Select, Textarea, Button, Badge } from '../../components/ui';
+import { Button } from '../../design-system/Button';
+import { Card, CardBody, CardHeader, CardTitle, CardDescription } from '../../design-system/Card';
+import { Badge } from '../../design-system/Badge';
+import { Field, Input, Textarea } from '../../design-system/Input';
+import { Select } from '../../design-system/Select';
+import { Avatar } from '../../design-system/Avatar';
+import { PageHeader } from '../../components/layout/PageHeader';
 
 const LEVELS = [
   { value: 'class-9',  label: 'Class 9' },
@@ -40,9 +46,9 @@ export default function Profile() {
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  function update(k, v){ setForm((p) => ({ ...p, [k]: v })); }
+  function update(k, v) { setForm((p) => ({ ...p, [k]: v })); }
 
-  async function save(){
+  async function save() {
     setSaving(true);
     setSaved(false);
     try {
@@ -56,10 +62,11 @@ export default function Profile() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Profile</h1>
-        <p className="mt-1 text-slate-500">Your information drives every recommendation.</p>
-      </div>
+      <PageHeader
+        eyebrow="Profile"
+        title="Your information"
+        subtitle="Drives every recommendation we make."
+      />
 
       <Card>
         <CardHeader>
@@ -70,7 +77,16 @@ export default function Profile() {
           <CardDescription>Managed by Firebase Authentication.</CardDescription>
         </CardHeader>
         <CardBody>
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="flex items-center gap-4">
+            <Avatar name={profile?.name || user?.email} size="lg" />
+            <div>
+              <div className="text-base font-semibold text-slate-900">
+                {profile?.name || (user?.email?.split('@')[0] ?? 'User')}
+              </div>
+              <div className="text-sm text-slate-500">{user?.email}</div>
+            </div>
+          </div>
+          <div className="mt-6 grid sm:grid-cols-2 gap-4">
             <Field label="Display name">
               <Input value={form.name} onChange={(e) => update('name', e.target.value)} />
             </Field>
@@ -115,7 +131,7 @@ export default function Profile() {
           </Field>
           <div className="flex items-center justify-end gap-3">
             {saved ? <Badge tone="success">Saved</Badge> : null}
-            <Button onClick={save} disabled={saving}>
+            <Button onClick={save} loading={saving}>
               {saving ? 'Saving…' : 'Save changes'}
             </Button>
           </div>
