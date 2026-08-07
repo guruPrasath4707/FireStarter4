@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bell, Search } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useProfile } from '../../context/ProfileContext';
 import { Brand } from './Brand';
 import { Avatar } from '../../design-system/Avatar';
 import { Button } from '../../design-system/Button';
@@ -8,7 +9,8 @@ import { Dropdown, DropdownItem } from '../../design-system/Dropdown';
 import { Divider } from '../../design-system/Divider';
 
 export function Topbar({ pageTitle, pageSubtitle }) {
-  const { user, profile, logout } = useAuth();
+  const { user, logout } = useAuth();
+  const { profile } = useProfile();
   const name = profile?.name || user?.displayName || (user?.email?.split('@')[0] ?? 'User');
 
   return (

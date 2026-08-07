@@ -10,6 +10,7 @@ import {
   Bot,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useProfile } from '../../context/ProfileContext';
 import { Button } from '../../design-system/Button';
 import { Card, CardBody, CardHeader, CardTitle, CardDescription } from '../../design-system/Card';
 import { Badge } from '../../design-system/Badge';
@@ -18,12 +19,12 @@ import { PageHeader, Section, Stat } from '../../components/layout/PageHeader';
 import { EmptyState } from '../../components/layout/EmptyState';
 
 export default function Dashboard() {
-  const { profile, onboarding } = useAuth();
+  const { profile } = useProfile();
   const firstName = (profile?.name || '').split(' ')[0] || 'there';
 
-  const goal = onboarding?.careerGoal || 'Define your career goal to unlock personalized paths.';
-  const studyMinutes = Number(onboarding?.dailyStudyGoal) || 30;
-  const interests = onboarding?.interests || [];
+  const goal = profile?.careerGoal || 'Define your career goal to unlock personalized paths.';
+  const studyMinutes = Number(profile?.dailyStudyGoal) || 30;
+  const interests = profile?.interests || [];
 
   return (
     <div className="space-y-6">

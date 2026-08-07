@@ -19,6 +19,7 @@ import { Field, Input, Textarea } from '../../design-system/Input';
 import { Select } from '../../design-system/Select';
 import { Progress } from '../../design-system/Progress';
 import { useAuth } from '../../context/AuthContext';
+import { useProfile } from '../../context/ProfileContext';
 
 const STEPS = ['Basics', 'Interests', 'Goals', 'Preferences'];
 
@@ -59,7 +60,8 @@ const STUDY_GOALS = [
 ];
 
 export default function Onboarding() {
-  const { completeOnboarding } = useAuth();
+  const { syncDisplayName } = useAuth();
+  const { completeOnboarding } = useProfile();
   const navigate = useNavigate();
 
   const [step, setStep] = useState(0);
@@ -99,6 +101,7 @@ export default function Onboarding() {
     setError('');
     setSubmitting(true);
     try {
+      await syncDisplayName(data.name);
       await completeOnboarding(data);
       navigate('/dashboard', { replace: true });
     } catch (err) {

@@ -1,5 +1,7 @@
-// Feature: careers
-// Phase 2: placeholder barrel. Real implementation (CareerExplorer + API)
-// will land in a later phase.
 export const FEATURE_KEY = 'careers';
-export default {};
+
+export const careersService = {
+  list: () => import('../../services/apiClient').then((m) => m.apiClient.get('/careers')),
+};
+
+export default { FEATURE_KEY, careersService };

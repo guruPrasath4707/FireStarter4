@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useProfile } from '../../context/ProfileContext';
 import { Button } from '../../design-system/Button';
 import { Card, CardBody, CardHeader, CardTitle, CardDescription } from '../../design-system/Card';
 import { Badge } from '../../design-system/Badge';
@@ -34,14 +35,15 @@ const STUDY = [
 ];
 
 export default function Profile() {
-  const { user, profile, onboarding, completeOnboarding } = useAuth();
+  const { user, syncDisplayName } = useAuth();
+  const { profile, updateProfile } = useProfile();
   const [form, setForm] = useState({
     name: profile?.name || '',
-    academicLevel: onboarding?.academicLevel || 'class-12',
-    interests: onboarding?.interests || [],
-    careerGoal: onboarding?.careerGoal || '',
-    preferredLanguage: onboarding?.preferredLanguage || 'en',
-    dailyStudyGoal: String(onboarding?.dailyStudyGoal || 30),
+    academicLevel: profile?.academicLevel || 'class-12',
+    interests: profile?.interests || [],
+    careerGoal: profile?.careerGoal || '',
+    preferredLanguage: profile?.preferredLanguage || 'en',
+    dailyStudyGoal: String(profile?.dailyStudyGoal || 30),
   });
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -52,7 +54,15 @@ export default function Profile() {
     setSaving(true);
     setSaved(false);
     try {
-      await completeOnboarding(form);
+      await syncDisplayName(form.name);
+      await updateProfile({
+        name: form.name,
+        academicLevel: form.academicLevel,
+        interests: form.interests,
+        careerGoal: form.careerGoal,
+        preferredLanguage: form.preferredLanguage,
+        dailyStudyGoal: Number(form.dailyStudyGoal) || 30,
+      });
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } finally {

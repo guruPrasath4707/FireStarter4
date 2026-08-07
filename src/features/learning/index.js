@@ -1,2 +1,7 @@
 export const FEATURE_KEY = 'learning';
-export default {};
+
+export const learningService = {
+  list: () => import('../../services/apiClient').then((m) => m.apiClient.get('/learning')),
+};
+
+export default { FEATURE_KEY, learningService };
