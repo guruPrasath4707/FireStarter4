@@ -5,36 +5,39 @@ import { onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWith
 
 const AuthContext = createContext(null);
 
-function loadLocalProfile(uid){
+const ONBOARDING_KEY = (uid) => `eg_onboarding_${uid}`;
+
+function loadOnboarding(uid){
   try{
-    const raw = localStorage.getItem('eg_profile_'+uid);
+    const raw = localStorage.getItem(ONBOARDING_KEY(uid));
     return raw ? JSON.parse(raw) : null;
-  }catch{return null;}
+  }catch{ return null; }
 }
-function saveLocalProfile(uid, obj){
-  try{ localStorage.setItem('eg_profile_'+uid, JSON.stringify(obj)); }catch{}
+
+function saveOnboarding(uid, data){
+  try{ localStorage.setItem(ONBOARDING_KEY(uid), JSON.stringify(data)); }catch{}
 }
 
 export function AuthProvider({ children }){
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [onboarding, setOnboarding] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(()=>{
     const unsub = onAuthStateChanged(auth, (u)=>{
       setUser(u);
       if(u){
-        const local = loadLocalProfile(u.uid) || {};
+        const ob = loadOnboarding(u.uid);
+        setOnboarding(ob);
         setProfile({
-          name: u.displayName || local.name || (u.email?.split('@')[0] ?? 'User'),
-          email: u.email || local.email || '',
-          district: local.district || '',
-          class: local.class || '12',
-          stream: local.stream || 'Undecided',
-          gender: local.gender || '—'
+          name: u.displayName || ob?.name || (u.email?.split('@')[0] ?? 'User'),
+          email: u.email || '',
+          photoURL: u.photoURL || '',
         });
       }else{
         setProfile(null);
+        setOnboarding(null);
       }
       setLoading(false);
     });
@@ -44,7 +47,6 @@ export function AuthProvider({ children }){
   async function signup({ name, email, password }){
     const cred = await createUserWithEmailAndPassword(auth, email, password);
     if(name){ await fbUpdateProfile(cred.user, { displayName: name }); }
-    saveLocalProfile(cred.user.uid, { name, email });
     return cred.user;
   }
 
@@ -57,19 +59,43 @@ export function AuthProvider({ children }){
     await signOut(auth);
   }
 
-  async function updateProfile(patch){
-    if(!auth.currentUser) return;
+  async function completeOnboarding(data){
+    if(!auth.currentUser) throw new Error('Not authenticated');
     const uid = auth.currentUser.uid;
-    const base = loadLocalProfile(uid) || {};
-    const merged = { ...base, ...patch };
-    if(typeof patch?.name === 'string' && patch.name.trim()){
-      try{ await fbUpdateProfile(auth.currentUser, { displayName: patch.name.trim() }); }catch{}
+    const payload = {
+      name: data.name?.trim() || auth.currentUser.displayName || '',
+      academicLevel: data.academicLevel || '',
+      interests: Array.isArray(data.interests) ? data.interests : [],
+      careerGoal: data.careerGoal || '',
+      preferredLanguage: data.preferredLanguage || 'en',
+      dailyStudyGoal: Number(data.dailyStudyGoal) || 30,
+      completedAt: new Date().toISOString(),
+    };
+    if(payload.name){
+      try{ await fbUpdateProfile(auth.currentUser, { displayName: payload.name }); }catch{}
     }
-    saveLocalProfile(uid, merged);
-    setProfile(prev => ({ ...(prev||{}), ...merged }));
+    saveOnboarding(uid, payload);
+    setOnboarding(payload);
+    setProfile((prev) => ({ ...(prev||{}), name: payload.name, email: auth.currentUser?.email || prev?.email || '' }));
+    return payload;
   }
 
-  const value = { user, profile, loading, signup, login, logout, updateProfile };
+  function needsOnboarding(){
+    return !!user && !onboarding;
+  }
+
+  const value = {
+    user,
+    profile,
+    onboarding,
+    loading,
+    needsOnboarding: needsOnboarding(),
+    signup,
+    login,
+    logout,
+    completeOnboarding,
+  };
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

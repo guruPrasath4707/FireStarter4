@@ -1,13 +1,64 @@
-/* Tailwind v4 single import (no PostCSS config needed) */
 @import "tailwindcss";
 
-/* Optional app styles */
-:root { --brand-600: #2563eb; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --brand-50:  #eef2ff;
+  --brand-100: #e0e7ff;
+  --brand-200: #c7d2fe;
+  --brand-300: #a5b4fc;
+  --brand-400: #818cf8;
+  --brand-500: #6366f1;
+  --brand-600: #4f46e5;
+  --brand-700: #4338ca;
+  --brand-800: #3730a3;
+  --brand-900: #312e81;
+
+  --accent-50:  #fdf4ff;
+  --accent-100: #fae8ff;
+  --accent-300: #f0abfc;
+  --accent-500: #d946ef;
+
+  --ink-900: #0f172a;
+  --ink-700: #334155;
+  --ink-500: #64748b;
+  --ink-300: #cbd5e1;
+  --ink-200: #e2e8f0;
+  --ink-100: #f1f5f9;
+
+  --surface-page: #f8fafc;
+  --surface-raised: #ffffff;
+
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-pop:  0 8px 30px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+html, body, #root {
+  height: 100%;
+}
+
 body {
-  background-image: linear-gradient(180deg, #f8fbff, #ffffff);
-  color: #0f172a;
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--surface-page);
+  background-image: linear-gradient(180deg, #f8fafc 0%, #ffffff 60%);
+  color: var(--ink-900);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.card { @apply rounded-2xl border border-slate-200 bg-white shadow; }
-.soft { @apply rounded-xl border border-blue-100 bg-blue-50; }
+
+* { box-sizing: border-box; }
+a { color: inherit; }
+
+::selection {
+  background: var(--ink-900);
+  color: white;
+}
+
+@layer components {
+  .ds-card {
+    border-radius: 1rem;
+    border: 1px solid var(--ink-200);
+    background-color: var(--surface-raised);
+    box-shadow: var(--shadow-card);
+  }
+}
