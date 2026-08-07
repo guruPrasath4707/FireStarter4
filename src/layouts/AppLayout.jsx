@@ -2,6 +2,7 @@ import React from 'react';
 import { Sidebar } from '../components/layout/Sidebar';
 import { Topbar } from '../components/layout/Topbar';
 import { AppFooter } from '../components/layout/AppFooter';
+import { ToastHost } from '../components/layout/useToast';
 import { Outlet } from 'react-router-dom';
 
 export function AppLayout() {
@@ -17,6 +18,7 @@ export function AppLayout() {
         </main>
         <AppFooter />
       </div>
+      <ToastHost />
     </div>
   );
 }

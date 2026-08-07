@@ -11,6 +11,7 @@ import Onboarding from '../pages/auth/Onboarding';
 
 import Dashboard from '../pages/app/Dashboard';
 import CareerExplorer from '../pages/app/CareerExplorer';
+import CareerDetail from '../features/careers/pages/CareerDetailPage';
 import LearningHub from '../pages/app/LearningHub';
 import AIMentor from '../pages/app/AIMentor';
 import Assessments from '../pages/app/Assessments';
@@ -45,6 +46,7 @@ export function AppRoutes() {
       >
         <Route path="/dashboard"     element={<Dashboard />} />
         <Route path="/careers"       element={<CareerExplorer />} />
+        <Route path="/careers/:id"   element={<CareerDetail />} />
         <Route path="/learning"      element={<LearningHub />} />
         <Route path="/mentor"        element={<AIMentor />} />
         <Route path="/assessments"   element={<Assessments />} />
