@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthLayout } from '../../components/auth/AuthLayout';
-import { Button, Card, CardBody, Field, Input } from '../../components/ui';
+import { AuthLayout } from '../../layouts/AuthLayout';
+import { Button } from '../../design-system/Button';
+import { Card, CardBody } from '../../design-system/Card';
+import { Field, Input } from '../../design-system/Input';
+import { Badge } from '../../design-system/Badge';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Register() {
@@ -12,11 +15,11 @@ export default function Register() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  function update(k, v){
+  function update(k, v) {
     setForm((p) => ({ ...p, [k]: v }));
   }
 
-  async function handleSubmit(e){
+  async function handleSubmit(e) {
     e.preventDefault();
     setError('');
     if (form.password.length < 6) {
@@ -49,6 +52,10 @@ export default function Register() {
     >
       <Card>
         <CardBody className="p-6">
+          <div className="flex items-center justify-between mb-5">
+            <Badge tone="violet">Get started</Badge>
+            <span className="text-xs text-slate-500">Free • No credit card</span>
+          </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Field label="Full name" htmlFor="name" required>
               <Input
@@ -87,7 +94,7 @@ export default function Register() {
                 {error}
               </div>
             ) : null}
-            <Button type="submit" variant="gradient" className="w-full" disabled={submitting}>
+            <Button type="submit" variant="brand" className="w-full" loading={submitting}>
               {submitting ? 'Creating account…' : 'Create account'}
             </Button>
             <p className="text-xs text-slate-500 text-center">

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthLayout } from '../../components/auth/AuthLayout';
-import { Button, Card, CardBody, Field, Input } from '../../components/ui';
+import { AuthLayout } from '../../layouts/AuthLayout';
+import { Button } from '../../design-system/Button';
+import { Card, CardBody } from '../../design-system/Card';
+import { Field, Input } from '../../design-system/Input';
+import { Badge } from '../../design-system/Badge';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Login() {
@@ -12,11 +15,11 @@ export default function Login() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  function update(k, v){
+  function update(k, v) {
     setForm((p) => ({ ...p, [k]: v }));
   }
 
-  async function handleSubmit(e){
+  async function handleSubmit(e) {
     e.preventDefault();
     setError('');
     setSubmitting(true);
@@ -45,6 +48,10 @@ export default function Login() {
     >
       <Card>
         <CardBody className="p-6">
+          <div className="flex items-center justify-between mb-5">
+            <Badge tone="brand">Sign in</Badge>
+            <span className="text-xs text-slate-500">Secure • Firebase</span>
+          </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Field label="Email" htmlFor="email" required>
               <Input
@@ -73,7 +80,7 @@ export default function Login() {
                 {error}
               </div>
             ) : null}
-            <Button type="submit" variant="gradient" className="w-full" disabled={submitting}>
+            <Button type="submit" variant="brand" className="w-full" loading={submitting}>
               {submitting ? 'Signing in…' : 'Sign in'}
             </Button>
           </form>

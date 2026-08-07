@@ -9,9 +9,15 @@ import {
   HeartPulse,
   Languages,
   Wrench,
+  Check,
 } from 'lucide-react';
-import { Brand } from '../../components/shell/Brand';
-import { Button, Card, CardBody, Field, Input, Select, Textarea, Badge, Progress } from '../../components/ui';
+import { Brand } from '../../components/layout/Brand';
+import { Button } from '../../design-system/Button';
+import { Card, CardBody } from '../../design-system/Card';
+import { Badge } from '../../design-system/Badge';
+import { Field, Input, Textarea } from '../../design-system/Input';
+import { Select } from '../../design-system/Select';
+import { Progress } from '../../design-system/Progress';
 import { useAuth } from '../../context/AuthContext';
 
 const STEPS = ['Basics', 'Interests', 'Goals', 'Preferences'];
@@ -69,13 +75,16 @@ export default function Onboarding() {
     dailyStudyGoal: '30',
   });
 
-  function update(k, v){
+  function update(k, v) {
     setData((p) => ({ ...p, [k]: v }));
   }
-  function toggleInterest(id){
+  function toggleInterest(id) {
     setData((p) => {
       const has = p.interests.includes(id);
-      return { ...p, interests: has ? p.interests.filter((x) => x !== id) : [...p.interests, id] };
+      return {
+        ...p,
+        interests: has ? p.interests.filter((x) => x !== id) : [...p.interests, id],
+      };
     });
   }
 
@@ -86,7 +95,7 @@ export default function Onboarding() {
     return true;
   })();
 
-  async function finish(){
+  async function finish() {
     setError('');
     setSubmitting(true);
     try {
@@ -99,12 +108,12 @@ export default function Onboarding() {
     }
   }
 
-  function next(){
+  function next() {
     if (!stepValid) return;
     if (step < STEPS.length - 1) setStep(step + 1);
     else finish();
   }
-  function prev(){
+  function prev() {
     if (step > 0) setStep(step - 1);
   }
 
@@ -125,7 +134,7 @@ export default function Onboarding() {
               <div
                 key={s}
                 className={
-                  'text-xs px-2.5 py-1 rounded-full border ' +
+                  'text-xs px-2.5 py-1 rounded-full border flex items-center gap-1 ' +
                   (i === step
                     ? 'bg-slate-900 text-white border-slate-900'
                     : i < step
@@ -133,6 +142,7 @@ export default function Onboarding() {
                     : 'bg-white text-slate-500 border-slate-200')
                 }
               >
+                {i < step ? <Check size={10} /> : null}
                 {s}
               </div>
             ))}
@@ -144,7 +154,7 @@ export default function Onboarding() {
             {step === 0 ? (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-xl font-semibold text-slate-900">Let's start with the basics</h2>
+                  <h2 className="text-xl font-semibold text-slate-900">Let’s start with the basics</h2>
                   <p className="mt-1 text-sm text-slate-500">We use this to personalize your experience.</p>
                 </div>
                 <Field label="Your name" htmlFor="ob-name" required>
@@ -170,7 +180,7 @@ export default function Onboarding() {
               <div className="space-y-5">
                 <div>
                   <h2 className="text-xl font-semibold text-slate-900">What sparks your curiosity?</h2>
-                  <p className="mt-1 text-sm text-slate-500">Pick a few. We'll use them to shape your path.</p>
+                  <p className="mt-1 text-sm text-slate-500">Pick a few. We’ll use them to shape your path.</p>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {INTERESTS.map(({ id, label, icon: Icon }) => {
@@ -194,7 +204,7 @@ export default function Onboarding() {
                   })}
                 </div>
                 <p className="text-xs text-slate-500">
-                  {data.interests.length} selected{'\u00A0'}· minimum 1
+                  {data.interests.length} selected · minimum 1
                 </p>
               </div>
             ) : null}
@@ -263,9 +273,10 @@ export default function Onboarding() {
                   </span>
                 ) : null}
                 <Button
-                  variant="gradient"
+                  variant="brand"
                   onClick={next}
                   disabled={!stepValid || submitting}
+                  loading={submitting && step === STEPS.length - 1}
                 >
                   {step === STEPS.length - 1
                     ? (submitting ? 'Saving…' : 'Finish setup')
