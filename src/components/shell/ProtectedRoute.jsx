@@ -1,12 +1,14 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useProfile } from '../../context/ProfileContext';
 
 export function ProtectedRoute({ children }) {
-  const { user, loading, needsOnboarding } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const { needsOnboarding, loading: profileLoading } = useProfile();
   const location = useLocation();
 
-  if (loading) {
+  if (authLoading || profileLoading) {
     return (
       <div className="min-h-screen grid place-items-center bg-[linear-gradient(180deg,#f8fbff_0%,#ffffff_60%)]">
         <div className="flex items-center gap-3 text-slate-500 text-sm">

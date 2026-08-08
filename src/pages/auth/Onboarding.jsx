@@ -20,6 +20,7 @@ import { Select } from '../../design-system/Select';
 import { Progress } from '../../design-system/Progress';
 import { useAuth } from '../../context/AuthContext';
 import { useProfile } from '../../context/ProfileContext';
+import { useGamification } from '../../features/gamification';
 
 const STEPS = ['Basics', 'Interests', 'Goals', 'Preferences'];
 
@@ -62,6 +63,7 @@ const STUDY_GOALS = [
 export default function Onboarding() {
   const { syncDisplayName } = useAuth();
   const { completeOnboarding } = useProfile();
+  const { awardXP } = useGamification();
   const navigate = useNavigate();
 
   const [step, setStep] = useState(0);
@@ -103,6 +105,8 @@ export default function Onboarding() {
     try {
       await syncDisplayName(data.name);
       await completeOnboarding(data);
+      // Award XP for completing onboarding — triggers 'First Steps' badge
+      awardXP('ONBOARDING_COMPLETE');
       navigate('/dashboard', { replace: true });
     } catch (err) {
       setError(err?.message || 'Unable to save your preferences.');

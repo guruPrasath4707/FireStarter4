@@ -20,6 +20,7 @@ import Opportunities from '../pages/app/Opportunities';
 import Profile from '../pages/app/Profile';
 import Settings from '../pages/app/Settings';
 import NotFound from '../pages/NotFound';
+import ProgressPage from '../pages/app/ProgressPage';
 
 export function AppRoutes() {
   return (
@@ -54,6 +55,7 @@ export function AppRoutes() {
         <Route path="/opportunities" element={<Opportunities />} />
         <Route path="/profile"       element={<Profile />} />
         <Route path="/settings"      element={<Settings />} />
+        <Route path="/progress"      element={<ProgressPage />} />
       </Route>
 
       <Route path="/404" element={<NotFound />} />

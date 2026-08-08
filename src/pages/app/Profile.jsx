@@ -8,6 +8,7 @@ import { Field, Input, Textarea } from '../../design-system/Input';
 import { Select } from '../../design-system/Select';
 import { Avatar } from '../../design-system/Avatar';
 import { PageHeader } from '../../components/layout/PageHeader';
+import { GamificationSummary } from '../../features/gamification';
 
 const LEVELS = [
   { value: 'class-9',  label: 'Class 9' },
@@ -147,6 +148,8 @@ export default function Profile() {
           </div>
         </CardBody>
       </Card>
+
+      <GamificationSummary />
     </div>
   );
 }

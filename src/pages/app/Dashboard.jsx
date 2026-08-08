@@ -8,23 +8,38 @@ import {
   BookOpen,
   ClipboardCheck,
   Bot,
+  Trophy,
 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
 import { useProfile } from '../../context/ProfileContext';
+import { useGamification } from '../../features/gamification';
 import { Button } from '../../design-system/Button';
 import { Card, CardBody, CardHeader, CardTitle, CardDescription } from '../../design-system/Card';
 import { Badge } from '../../design-system/Badge';
 import { Progress } from '../../design-system/Progress';
 import { PageHeader, Section, Stat } from '../../components/layout/PageHeader';
 import { EmptyState } from '../../components/layout/EmptyState';
+import { GamificationSummary } from '../../features/gamification';
 
 export default function Dashboard() {
   const { profile } = useProfile();
+  const { state: gState } = useGamification();
   const firstName = (profile?.name || '').split(' ')[0] || 'there';
 
   const goal = profile?.careerGoal || 'Define your career goal to unlock personalized paths.';
   const studyMinutes = Number(profile?.dailyStudyGoal) || 30;
   const interests = profile?.interests || [];
+
+  const streakDays = gState?.streakDays ?? 0;
+  const xp = gState?.xp ?? 0;
+  const level = gState?.level ?? 0;
+
+  // Rough profile completeness: interests + goal + name each add weight
+  const completeness = Math.min(
+    100,
+    (interests.length > 0 ? 40 : 0) +
+      (profile?.careerGoal ? 35 : 0) +
+      (profile?.name ? 25 : 0),
+  );
 
   return (
     <div className="space-y-6">
@@ -44,8 +59,8 @@ export default function Dashboard() {
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Stat label="Daily goal" value={`${studyMinutes} min`} hint="Stay consistent" tone="brand" />
         <Stat label="Interests" value={interests.length} hint="Curated for you" tone="violet" />
-        <Stat label="Streak" value="0 days" hint="Build the habit" tone="success" />
-        <Stat label="Progress" value="0%" hint="Across your path" />
+        <Stat label="Streak" value={`${streakDays} day${streakDays === 1 ? '' : 's'}`} hint="Build the habit" tone="success" />
+        <Stat label="Level" value={`Lvl ${level}`} hint={`${xp} XP total`} />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -63,7 +78,7 @@ export default function Dashboard() {
             </div>
             <div className="mt-5">
               <Progress
-                value={interests.length ? 72 : 28}
+                value={completeness}
                 label="Profile completeness"
               />
             </div>
@@ -97,6 +112,21 @@ export default function Dashboard() {
           </CardBody>
         </Card>
       </div>
+
+      {/* Live gamification section */}
+      <Section
+        title="Your progress"
+        subtitle="XP, level, streak, and achievement badges — earned by using FireStarter."
+        action={
+          <Link to="/progress">
+            <Button variant="ghost" size="sm" rightIcon={Trophy}>
+              View all
+            </Button>
+          </Link>
+        }
+      >
+        <GamificationSummary />
+      </Section>
 
       <Section
         title="Upcoming"

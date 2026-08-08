@@ -2,6 +2,7 @@ import React from 'react';
 import { Bell, Search } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useProfile } from '../../context/ProfileContext';
+import { useGamification, XPBar, StreakBadge } from '../../features/gamification';
 import { Brand } from './Brand';
 import { Avatar } from '../../design-system/Avatar';
 import { Button } from '../../design-system/Button';
@@ -11,6 +12,7 @@ import { Divider } from '../../design-system/Divider';
 export function Topbar({ pageTitle, pageSubtitle }) {
   const { user, logout } = useAuth();
   const { profile } = useProfile();
+  const { state, loading } = useGamification();
   const name = profile?.name || user?.displayName || (user?.email?.split('@')[0] ?? 'User');
 
   return (
@@ -42,6 +44,14 @@ export function Topbar({ pageTitle, pageSubtitle }) {
           <Button variant="ghost" size="iconSm" aria-label="Notifications">
             <Bell size={16} />
           </Button>
+
+          {state && !loading ? (
+            <div className="flex items-center gap-2">
+              <StreakBadge streakDays={state.streakDays ?? 0} />
+              <XPBar xp={state.xp ?? 0} level={state.level ?? 0} compact />
+            </div>
+          ) : null}
+
           <Divider className="hidden sm:block !w-px !h-6 !bg-slate-200" />
           <Dropdown
             trigger={

@@ -2,9 +2,13 @@ import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Brand } from './Brand';
 import { Button } from '../ui';
+import { useGamification } from '../../features/gamification';
+import { XPBar } from '../../features/gamification/components/XPBar';
+import { StreakBadge } from '../../features/gamification/components/StreakBadge';
 
 export function TopBar({ onOpenMobileNav, pageTitle, pageSubtitle }) {
   const { user, logout, profile } = useAuth();
+  const { state: gState } = useGamification();
   const initial = (profile?.name || user?.displayName || user?.email || 'U').trim().charAt(0).toUpperCase();
   const displayName = profile?.name || user?.displayName || (user?.email?.split('@')[0] ?? 'User');
 
@@ -41,6 +45,11 @@ export function TopBar({ onOpenMobileNav, pageTitle, pageSubtitle }) {
               placeholder="Search…"
               className="w-full bg-transparent text-sm placeholder:text-slate-400 focus:outline-none"
             />
+          </div>
+          {/* Gamification mini-display */}
+          <div className="hidden md:flex items-center gap-2">
+            <StreakBadge streakDays={gState?.streakDays ?? 0} />
+            <XPBar xp={gState?.xp ?? 0} level={gState?.level ?? 0} compact />
           </div>
           <div className="flex items-center gap-2">
             <div className="hidden sm:block text-right">

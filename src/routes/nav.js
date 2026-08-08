@@ -8,6 +8,7 @@ import {
   Briefcase,
   User,
   Settings as SettingsIcon,
+  Trophy,
 } from 'lucide-react';
 
 export const PRIMARY_NAV = [
@@ -18,6 +19,8 @@ export const PRIMARY_NAV = [
   { to: '/assessments',  label: 'Assessments',      icon: ClipboardCheck },
   { to: '/scholarships', label: 'Scholarships',     icon: GraduationCap },
   { to: '/opportunities',label: 'Opportunities',    icon: Briefcase },
+  { to: '/progress',     label: 'Progress',         icon: Trophy },
   { to: '/profile',      label: 'Profile',          icon: User },
   { to: '/settings',     label: 'Settings',         icon: SettingsIcon },
 ];
+

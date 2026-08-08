@@ -11,6 +11,7 @@ import { Spinner } from '../../../design-system/Spinner';
 import { Button } from '../../../design-system/Button';
 import { EmptyState } from '../../../components/layout/EmptyState';
 import { useToast } from '../../../components/layout/useToast';
+import { useGamification } from '../../gamification';
 import { Compass, ArrowRight } from 'lucide-react';
 
 export default function CareerDetailPage() {
@@ -22,6 +23,7 @@ export default function CareerDetailPage() {
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState(null);
   const toast = useToast();
+  const { awardXP } = useGamification();
 
   useEffect(() => {
     let alive = true;
@@ -40,6 +42,8 @@ export default function CareerDetailPage() {
           return;
         }
         setCareer(data);
+        // Award XP for viewing a career (deduplicated by career id + date within session)
+        awardXP('CAREER_VIEWED', { careerId: data.id });
         const ids = (data.relatedCareers || []).slice(0, 3);
         if (ids.length === 0) {
           setRelated([]);
@@ -64,7 +68,8 @@ export default function CareerDetailPage() {
 
   function handleAddToPath() {
     if (!career) return;
-    // Phase-4 placeholder: surface a confirmation. Persistence lands in a later phase.
+    // Award XP for saving a career to the path
+    awardXP('CAREER_SAVED', { careerId: career.id });
     toast?.({
       title: `${career.title} added to your path`,
       description: 'You can review your saved careers in the Learning Hub.',
