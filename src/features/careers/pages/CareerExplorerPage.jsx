@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useProfile } from '../../../context/ProfileContext';
 import { careersService } from '../services/careersService';
 import { getCareerInterestFit } from '../services/careerFit';
@@ -25,8 +26,18 @@ export default function CareerExplorerPage() {
   const [error, setError] = useState(null);
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState(ALL);
-  const [showSavedOnly, setShowSavedOnly] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const showSavedOnly = searchParams.get('saved') === '1';
   const [reloadKey, setReloadKey] = useState(0);
+
+  function setShowSavedOnly(enabled) {
+    setSearchParams((current) => {
+      const next = new URLSearchParams(current);
+      if (enabled) next.set('saved', '1');
+      else next.delete('saved');
+      return next;
+    }, { replace: true });
+  }
 
   useEffect(() => {
     let alive = true;

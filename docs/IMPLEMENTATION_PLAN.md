@@ -46,7 +46,7 @@ This is the working checklist for improving the existing application without pre
 - [x] Ensure all public navigation anchors land on a real section or route.
 - [x] Replace placeholder privacy/terms/help links with real pages or clearly non-interactive copy until those pages exist.
 - [x] Bring branding and public-facing UI copy into alignment with implemented capabilities.
-- [ ] Align the language selector with the translations that are actually implemented.
+- [x] Remove language choices that imply translations are complete when only English is implemented; communicate English-only availability honestly.
 
 ### 5. Working student features (incremental, not fake integrations)
 - [ ] Learning Hub: curated starter catalogue with clear source/license metadata and working completion state.
@@ -56,9 +56,9 @@ This is the working checklist for improving the existing application without pre
 - [ ] Dashboard: derive progress, streak, and timeline numbers from saved records, not hard-coded zeros or invented percentages.
 
 ### 6. Profile and settings reliability
-- [ ] Load and reinitialize the profile edit form when profile data changes.
-- [ ] Show save failures and success feedback; validate fields before writes.
-- [ ] Persist preference controls or remove the appearance of functional controls that do nothing.
+- [x] Rehydrate clean profile forms when saved data changes without overwriting unsaved edits.
+- [x] Show profile save errors and success feedback; validate and normalize fields before writes.
+- [x] Remove nonfunctional theme/notification controls and explain their current availability.
 - [ ] Handle logout and mobile navigation errors/keyboard behavior.
 
 ### 7. Architecture, accessibility, security, and performance
@@ -73,4 +73,6 @@ This is the working checklist for improving the existing application without pre
 
 Milestone 3 was completed and merged in PR #5. Interest overlap is calculated from profile tags, saved careers persist in Firestore, and unsupported match-score claims were removed.
 
-Milestone 4 is being implemented on the honest-public-experience branch. The landing page now states which capabilities work, removes fabricated testimonials and user-count claims, gives the FAQ a real target, and replaces dead footer links with a real issue tracker and an explicit notice that legal pages are not published. CI must pass before the milestone is considered verified.
+Milestone 4 was completed and merged in PR #6. The landing page identifies current feature status, removes fabricated testimonials and learner-count claims, provides a working FAQ, and replaces dead footer links with real project links and a notice that legal pages are not yet published.
+
+Milestone 5 foundation work is in progress on the profile-dashboard branch. Profile forms rehydrate only when clean, save changes are validated and show errors, unsupported language choices are removed, inactive settings controls are replaced with status notes, and dashboard statistics are derived from saved profile data. CI must pass before this milestone is considered verified.

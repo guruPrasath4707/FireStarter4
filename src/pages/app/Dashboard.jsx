@@ -1,15 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Sparkles,
   ArrowRight,
-  CalendarDays,
-  Compass,
   BookOpen,
-  ClipboardCheck,
-  Bot,
+  Compass,
+  UserRound,
 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
 import { useProfile } from '../../context/ProfileContext';
 import { Button } from '../../design-system/Button';
 import { Card, CardBody, CardHeader, CardTitle, CardDescription } from '../../design-system/Card';
@@ -17,98 +13,128 @@ import { Badge } from '../../design-system/Badge';
 import { Progress } from '../../design-system/Progress';
 import { PageHeader, Section, Stat } from '../../components/layout/PageHeader';
 import { EmptyState } from '../../components/layout/EmptyState';
+import { getProfileCompleteness } from '../../utils/profileCompleteness';
 
 export default function Dashboard() {
   const { profile } = useProfile();
-  const firstName = (profile?.name || '').split(' ')[0] || 'there';
-
-  const goal = profile?.careerGoal || 'Define your career goal to unlock personalized paths.';
+  const firstName = (profile?.name || '').trim().split(/\s+/)[0] || 'there';
+  const goal = profile?.careerGoal?.trim() || '';
   const studyMinutes = Number(profile?.dailyStudyGoal) || 30;
-  const interests = profile?.interests || [];
+  const interests = Array.isArray(profile?.interests) ? profile.interests : [];
+  const savedCareerIds = Array.isArray(profile?.savedCareerIds) ? profile.savedCareerIds : [];
+  const completeness = getProfileCompleteness(profile);
+  const hasSuggestedSteps = completeness.missingSteps.length > 0;
 
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Today"
+        eyebrow="Overview"
         title={`Welcome back, ${firstName}.`}
-        subtitle="Here's a snapshot of your path."
+        subtitle="A snapshot of the information you have saved so far."
         actions={
-          <Link to="/assessments">
-            <Button variant="brand" leftIcon={Sparkles}>
-              Start an assessment
-            </Button>
-          </Link>
+          <Button as={Link} to="/careers" variant="brand" leftIcon={Compass}>
+            Explore careers
+          </Button>
         }
       />
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Stat label="Daily goal" value={`${studyMinutes} min`} hint="Stay consistent" tone="brand" />
-        <Stat label="Interests" value={interests.length} hint="Curated for you" tone="violet" />
-        <Stat label="Streak" value="0 days" hint="Build the habit" tone="success" />
-        <Stat label="Progress" value="0%" hint="Across your path" />
+        <Stat label="Daily study goal" value={`${studyMinutes} min`} hint="Your selected target" tone="brand" />
+        <Stat label="Selected interests" value={interests.length} hint="From your saved profile" tone="violet" />
+        <Stat label="Saved careers" value={savedCareerIds.length} hint="Roles saved to your path" />
+        <Stat
+          label="Profile setup"
+          value={`${completeness.completeFields}/${completeness.totalFields}`}
+          hint={`${completeness.percentage}% of tracked profile fields`}
+        />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <CardTitle>Your career goal</CardTitle>
-              <Badge tone="brand">Personalized</Badge>
+              <Badge tone={goal ? 'success' : 'default'}>{goal ? 'Saved profile field' : 'Not set'}</Badge>
             </div>
-            <CardDescription>Update this anytime to reshape recommendations.</CardDescription>
+            <CardDescription>This is the goal you wrote in your profile, not an automatically generated recommendation.</CardDescription>
           </CardHeader>
           <CardBody>
             <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">
-              {goal}
+              {goal || 'Add a career goal to record what you want to explore.'}
             </div>
             <div className="mt-5">
               <Progress
-                value={interests.length ? 72 : 28}
-                label="Profile completeness"
+                value={completeness.percentage}
+                label="Profile details completed"
               />
+              <div className="mt-2 text-xs text-slate-500">
+                {completeness.completeFields} of {completeness.totalFields} tracked fields have values.
+              </div>
+            </div>
+            <div className="mt-5">
+              <Button as={Link} to="/profile" variant="outline" leftIcon={UserRound}>
+                Review profile
+              </Button>
             </div>
           </CardBody>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Today</CardTitle>
-            <CardDescription>A short list to keep momentum.</CardDescription>
+            <CardTitle>Useful next steps</CardTitle>
+            <CardDescription>Based on saved profile information, without invented streaks or activity.</CardDescription>
           </CardHeader>
           <CardBody className="space-y-3">
-            {[
-              { icon: ClipboardCheck, t: 'Take a 10-min baseline assessment', to: '/assessments' },
-              { icon: Compass,        t: 'Explore 3 career paths',          to: '/careers' },
-              { icon: BookOpen,       t: 'Read one recommended module',     to: '/learning' },
-              { icon: Bot,            t: 'Ask the AI mentor a question',    to: '/mentor' },
-            ].map(({ icon: Icon, t, to }, i) => (
-              <Link
-                key={i}
-                to={to}
-                className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5 hover:bg-slate-50 transition-colors"
-              >
-                <div className="h-9 w-9 rounded-lg bg-slate-100 text-slate-700 grid place-items-center">
-                  <Icon size={16} />
-                </div>
-                <div className="flex-1 text-sm text-slate-700">{t}</div>
-                <ArrowRight size={16} className="text-slate-400" />
-              </Link>
-            ))}
+            {hasSuggestedSteps ? (
+              completeness.missingSteps.slice(0, 3).map((step) => (
+                <Link
+                  key={step.key}
+                  to="/profile"
+                  className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5 hover:bg-slate-50 transition-colors"
+                >
+                  <div className="h-9 w-9 rounded-lg bg-slate-100 text-slate-700 grid place-items-center">
+                    <UserRound size={16} />
+                  </div>
+                  <div className="flex-1 text-sm text-slate-700">{step.label}</div>
+                  <ArrowRight size={16} className="text-slate-400" />
+                </Link>
+              ))
+            ) : (
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800">
+                Your tracked profile fields are complete. Continue exploring roles and saving the ones you want to research.
+              </div>
+            )}
+            <Link
+              to="/careers?saved=1"
+              className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5 hover:bg-slate-50 transition-colors"
+            >
+              <div className="h-9 w-9 rounded-lg bg-slate-100 text-slate-700 grid place-items-center">
+                <BookOpen size={16} />
+              </div>
+              <div className="flex-1 text-sm text-slate-700">Review saved careers</div>
+              <ArrowRight size={16} className="text-slate-400" />
+            </Link>
+            <Link
+              to="/careers"
+              className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5 hover:bg-slate-50 transition-colors"
+            >
+              <div className="h-9 w-9 rounded-lg bg-slate-100 text-slate-700 grid place-items-center">
+                <Compass size={16} />
+              </div>
+              <div className="flex-1 text-sm text-slate-700">Explore the career catalogue</div>
+              <ArrowRight size={16} className="text-slate-400" />
+            </Link>
           </CardBody>
         </Card>
       </div>
 
-      <Section
-        title="Upcoming"
-        subtitle="No live events yet — these populate as you go."
-        action={<Badge>Phase 1</Badge>}
-      >
+      <Section title="Other tools" subtitle="These areas are still being developed and are not represented as working services yet.">
         <Card>
           <CardBody>
             <EmptyState
-              icon={CalendarDays}
-              title="Your timeline will appear here"
-              description="Deadlines, mentor nudges, and assessment reminders will live in this space."
+              icon={BookOpen}
+              title="Learning tools are in development"
+              description="Learning Hub, assessments, AI Mentor, scholarships, and opportunities will be added when their underlying content and services are ready."
             />
           </CardBody>
         </Card>
