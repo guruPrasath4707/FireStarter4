@@ -2,7 +2,7 @@
 
 Pathlight is a React single-page application for student career exploration and learning planning. It uses Vite for development and production builds, Firebase Authentication for sign-in, and Cloud Firestore for user profiles.
 
-> **Implementation status:** this repository is an evolving prototype, not a finished full-stack product. The Career Explorer uses local mock data. Learning Hub, AI Mentor, Assessments, Scholarships, and Opportunities currently render placeholder screens. No backend service is included in this repository.
+> **Implementation status:** this repository is an evolving prototype, not a finished full-stack product. The Career Explorer uses local catalogue data, and the Learning Hub links to curated third-party material with self-reported completion tracking. AI Mentor, Assessments, Scholarships, and Opportunities remain unfinished. No backend service is included in this repository.
 
 ## What is implemented
 
@@ -10,6 +10,7 @@ Pathlight is a React single-page application for student career exploration and 
 - **Authentication:** email/password sign-up and sign-in through Firebase Authentication.
 - **Profile and onboarding:** profile state is shared through React context; profile documents are stored in the Firestore `users` collection.
 - **Career Explorer:** searchable/filterable career cards and detail pages driven by local catalogue data. Interest overlap is derived from explicit profile tags; it is not an AI recommendation model. Salary ranges and market outlook labels in the catalogue remain illustrative placeholders.
+- **Learning Hub:** six reviewed links to external educational resources, search/topic/interest filtering, provider-source and rights notes, and Firestore-persisted self-reported completion. Pathlight does not host the third-party lessons or verify activity on those sites.
 - **Application shell:** protected routes, dashboard, profile/settings screens, reusable UI/design-system components, and an English-only interface until complete translations are available.
 - **API client foundation:** a small fetch client exists for a future backend. It does not mean the backend is included or deployed.
 
@@ -87,7 +88,8 @@ src/
   components/       Shared layout and UI components
   context/          Authentication and profile state
   design-system/    Reusable visual components and tokens
-  features/careers/ Career Explorer, details, service, and mock dataset
+  features/careers/ Career Explorer, details, service, and catalogue data
+  features/learning/ Curated external resource catalogue and learning filters
   layouts/          Public, authenticated, and auth layouts
   pages/            Public, auth, app, and placeholder pages
   routes/           Route definitions and navigation metadata

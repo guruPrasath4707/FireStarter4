@@ -43,9 +43,9 @@ const FEATURES = [
   {
     icon: BookOpen,
     title: 'Learning Hub',
-    status: 'In development',
-    tone: 'default',
-    desc: 'A sourced, organized learning catalogue has not been implemented yet.',
+    status: 'Available after setup',
+    tone: 'success',
+    desc: 'Browse curated links to established learning resources, filter by topic and interest, and self-mark resources complete.',
   },
   {
     icon: ClipboardCheck,
@@ -107,7 +107,7 @@ const FAQS = [
   {
     question: 'Which tools work today?',
     answer:
-      'The profile flow, Career Explorer, and saved-career list are implemented when Firebase is configured. Learning Hub, Assessments, AI Mentor, Scholarships, and Opportunities are still under development or awaiting verified data sources.',
+      'The profile flow, Career Explorer, saved-career list, and curated Learning Hub are implemented when Firebase is configured. Learning Hub links to external providers and stores self-reported completion; it does not host course content. Assessments, AI Mentor, Scholarships, and Opportunities are still under development or awaiting verified data sources.',
   },
   {
     question: 'Why does account access need setup?',

@@ -7,7 +7,7 @@ This is the working checklist for improving the existing application without pre
 - React 18, Vite 5, React Router 7, and Tailwind CSS 4.
 - Firebase email/password auth and Firestore-backed user profiles are wired in the client.
 - Career Explorer reads a 12-item local demo catalogue. Interest overlap is calculated from profile tags; salary and outlook values remain illustrative and unverified.
-- Learning Hub, AI Mentor, Assessments, Scholarships, and Opportunities are placeholder pages despite navigation entries and early service stubs.
+- Learning Hub was a placeholder at the initial audit; it is now a curated external-resource catalogue with self-reported completion. AI Mentor, Assessments, Scholarships, and Opportunities remain unfinished.
 - No test suite existed at the audit baseline. The production build worked but did not detect the route/profile bugs noted below.
 - Multiple overlapping UI/layout and Firebase setup modules exist. A root-level Colleges.jsx appears to be legacy and is not part of the active route tree.
 - No backend server or Firebase Security Rules file is included in this repository. External Firebase console/rules settings cannot be verified from front-end code alone.
@@ -49,11 +49,11 @@ This is the working checklist for improving the existing application without pre
 - [x] Remove language choices that imply translations are complete when only English is implemented; communicate English-only availability honestly.
 
 ### 5. Working student features (incremental, not fake integrations)
-- [ ] Learning Hub: curated starter catalogue with clear source/license metadata and working completion state.
+- [x] Learning Hub: curated starter catalogue with publisher/source/rights metadata, topic/interest filters, and Firestore-persisted self-reported completion.
 - [ ] Assessments: deterministic, explainable baseline quiz and results; avoid unsupported “adaptive” claims.
 - [ ] AI Mentor: define a server-side API contract and safe deployment approach before connecting a model; no provider secrets in Vite client variables.
 - [ ] Scholarships and Opportunities: define verified source, freshness date, eligibility fields, application URL, and update owner before presenting listings as real.
-- [ ] Dashboard: derive progress, streak, and timeline numbers from saved records, not hard-coded zeros or invented percentages.
+- [x] Dashboard: derive profile metrics from saved records and link users into the working Learning Hub and saved-career filter.
 
 ### 6. Profile and settings reliability
 - [x] Rehydrate clean profile forms when saved data changes without overwriting unsaved edits.
@@ -75,4 +75,6 @@ Milestone 3 was completed and merged in PR #5. Interest overlap is calculated fr
 
 Milestone 4 was completed and merged in PR #6. The landing page identifies current feature status, removes fabricated testimonials and learner-count claims, provides a working FAQ, and replaces dead footer links with real project links and a notice that legal pages are not yet published.
 
-Milestone 5 foundation work is in progress on the profile-dashboard branch. Profile forms rehydrate only when clean, save changes are validated and show errors, unsupported language choices are removed, inactive settings controls are replaced with status notes, and dashboard statistics are derived from saved profile data. CI must pass before this milestone is considered verified.
+Profile/dashboard reliability was completed and merged in PR #7. Profile forms rehydrate only when clean, save changes are validated with visible feedback, unsupported language choices are removed, inactive settings controls are replaced with status notes, and dashboard statistics are derived from saved profile data.
+
+Learning Hub implementation and CI validation are complete on `work/learning-hub-catalogue-progress-2026-10-25`. It provides a source-reviewed, attribution-first catalogue of external resources, explicit interest-tag filtering, and atomic self-reported completion state stored in Firestore. It does not claim to host courses, verify external activity, or award certificates. The feature is ready for pull-request review; external links and provider terms will need periodic review.
