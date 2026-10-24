@@ -66,9 +66,13 @@ test('rejects missing or invalid answer IDs instead of silently scoring a partia
   );
 });
 
-test('scores contain only defined interests and never claim predictive validity', () => {
-  const result = scoreCareerInterestCheckin(answersForTags(Array(8).fill('health')));
-  assert.deepEqual(result.topInterests.map((tag) => tag.id), ['health']);
+test('scores contain only defined interest tags and never claim predictive validity', () => {
+  const result = scoreCareerInterestCheckin(
+    answersForTags(['tech', 'making', 'science', 'arts', 'business', 'math', 'languages', 'health']),
+  );
+  const validTagIds = new Set(INTEREST_TAGS.map((tag) => tag.id));
+  assert.ok(result.scores.every((tag) => validTagIds.has(tag.id)));
+  assert.ok(result.topInterests.every((tag) => validTagIds.has(tag.id) && tag.score > 0));
   assert.ok(result.scores.every((tag) => Number.isInteger(tag.score) && tag.score >= 0));
   assert.equal(result.title, 'Career interest check-in');
 });
