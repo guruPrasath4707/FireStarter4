@@ -17,6 +17,7 @@ The Career Explorer is a small reference catalogue and navigation aid. It is not
 - Interest overlap is a deterministic tag intersection; it is not an AI score, aptitude result, or probability of career success.
 - Salary ranges, market outlook labels, skill weights, roadmaps, and descriptions are illustrative placeholders. They are not currently linked to dated authoritative labour-market sources and must not be presented as current verified guidance.
 - Catalogue entries do not currently provide source citations. Add a source, geography, publication date and methodology before promoting salary/growth information as factual.
+- The Career Explorer and detail pages show an explicit notice that salary/outlook values are unverified illustrative placeholders. This is a risk disclosure, not a substitute for country-specific, dated labour-market sources.
 - Saved-career IDs are stored in `users/{uid}.savedCareerIds` using Firestore array transforms to avoid duplicate entries when saving from multiple tabs.
 
 ## Structure

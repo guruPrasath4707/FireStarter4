@@ -14,6 +14,7 @@ import { Button } from '../../../design-system/Button';
 import { EmptyState } from '../../../components/layout/EmptyState';
 import { useToast } from '../../../components/layout/useToast';
 import { Compass, ArrowRight } from 'lucide-react';
+import MarketDataNotice from '../components/MarketDataNotice';
 
 export default function CareerDetailPage() {
   const { id } = useParams();
@@ -153,6 +154,7 @@ export default function CareerDetailPage() {
 
   return (
     <div className="space-y-6">
+      <MarketDataNotice />
       <CareerDetailHeader
         career={career}
         fit={fit}

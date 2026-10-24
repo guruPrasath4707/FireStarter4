@@ -39,6 +39,7 @@ This is the working checklist for improving the existing application without pre
 - [x] Ensure no-interest, no-match, loading, and error states behave consistently.
 - [x] Persist saved careers atomically and make saved careers discoverable/filterable in the Career Explorer.
 - [x] Clearly label salary ranges, market outlook and skill weights as illustrative catalogue content.
+- [x] Add a visible market-data disclaimer on both the career catalogue and detail pages without implying that the placeholder figures have been verified.
 - [ ] Validate salary/outlook catalogue data against dated authoritative sources before presenting it as current labour-market information.
 
 ### 4. Honest public experience and navigation
