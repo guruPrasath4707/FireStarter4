@@ -43,16 +43,18 @@ test('category filtering limits results to the requested category', () => {
   assert.ok(result.items.every((resource) => resource.category === 'Web development'));
 });
 
-test('interest matching uses the same readable aliases as onboarding and keeps unmatched resources available by default', () => {
-  const all = listLearningResources({ interests: ['Technology', 'Math & Logic'] });
+test('interest matching normalizes the onboarding Math & Logic label and keeps unmatched resources available by default', () => {
+  const selectedInterests = ['Math & Logic'];
+  const all = listLearningResources({ interests: selectedInterests });
   const matching = listLearningResources({
-    interests: ['Technology', 'Math & Logic'],
+    interests: selectedInterests,
     matchingOnly: true,
   });
 
   assert.ok(all.total > matching.total);
-  assert.equal(matching.items[0].interestFit.matchCount, 2);
+  assert.equal(matching.items[0].interestFit.matchCount, 1);
   assert.ok(matching.items.every((resource) => resource.interestFit.matchCount > 0));
+  assert.ok(all.items.some((resource) => resource.interestFit.matchCount === 0));
 });
 
 test('with no selected interests, matching-only mode does not pretend to personalize the catalogue', () => {
