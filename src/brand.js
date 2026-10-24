@@ -1,11 +1,11 @@
 export const brand = {
   name: 'Pathlight',
-  tagline: 'The AI-powered platform for your career and learning.',
+  tagline: 'Career exploration for students.',
   description:
-    'Build adaptive learning paths, take intelligent assessments, and chat with an AI mentor — all designed around your goals.',
-  domain: 'pathlight.app',
-  emails: {
-    support: 'support@pathlight.app',
+    'Explore career profiles, compare transparent interest tags, and save roles worth researching. Learning tools are being built incrementally.',
+  links: {
+    source: 'https://github.com/guruPrasath4707/FireStarter4',
+    issues: 'https://github.com/guruPrasath4707/FireStarter4/issues',
   },
 };
 
