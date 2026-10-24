@@ -264,14 +264,29 @@ export default function LearningHub() {
                       <div className="mt-2 space-y-2 leading-relaxed">
                         <p>Source reviewed: {resource.sourceReviewDate}</p>
                         <p>{resource.rightsNote}</p>
-                        <a
-                          href={resource.sourceUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-indigo-700 underline underline-offset-2"
-                        >
-                          Publisher source page <ArrowUpRight size={12} />
-                        </a>
+                        <div className="space-y-1">
+                          <p className="font-medium text-slate-700">License / terms: {resource.licenseLabel}</p>
+                          <p>{resource.licenseNote}</p>
+                          <p>Rights information reviewed: {resource.rightsReviewedOn}</p>
+                        </div>
+                        <div className="flex flex-wrap gap-x-4 gap-y-2">
+                          <a
+                            href={resource.sourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-indigo-700 underline underline-offset-2"
+                          >
+                            Publisher source page <ArrowUpRight size={12} />
+                          </a>
+                          <a
+                            href={resource.licenseUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-indigo-700 underline underline-offset-2"
+                          >
+                            License / terms page <ArrowUpRight size={12} />
+                          </a>
+                        </div>
                       </div>
                     </details>
                   </div>

@@ -10,7 +10,7 @@ Pathlight is a React single-page application for student career exploration and 
 - **Authentication:** email/password sign-up and sign-in through Firebase Authentication.
 - **Profile and onboarding:** profile state is shared through React context; profile documents are stored in the Firestore `users` collection.
 - **Career Explorer:** searchable/filterable career cards and detail pages driven by local catalogue data. Interest overlap is derived from explicit profile tags; it is not an AI recommendation model. Salary ranges and market outlook labels in the catalogue remain illustrative placeholders.
-- **Learning Hub:** six reviewed links to external educational resources, search/topic/interest filtering, provider-source and rights notes, and Firestore-persisted self-reported completion. Pathlight does not host the third-party lessons or verify activity on those sites.
+- **Learning Hub:** six reviewed links to external educational resources, search/topic/interest filtering, provider-specific license/terms labels with links to the rights pages, and Firestore-persisted self-reported completion. Pathlight does not host the third-party lessons or verify activity on those sites.
 - **Application shell:** protected routes, dashboard, profile/settings screens, reusable UI/design-system components, and an English-only interface until complete translations are available.
 - **API client foundation:** a small fetch client exists for a future backend. It does not mean the backend is included or deployed.
 

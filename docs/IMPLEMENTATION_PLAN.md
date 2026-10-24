@@ -49,7 +49,7 @@ This is the working checklist for improving the existing application without pre
 - [x] Remove language choices that imply translations are complete when only English is implemented; communicate English-only availability honestly.
 
 ### 5. Working student features (incremental, not fake integrations)
-- [x] Learning Hub: curated starter catalogue with publisher/source/rights metadata, topic/interest filters, and Firestore-persisted self-reported completion.
+- [x] Learning Hub: curated starter catalogue with publisher/source/rights metadata, provider-specific license/terms links and conservative “no blanket reuse license assumed” labels where appropriate, topic/interest filters, and Firestore-persisted self-reported completion.
 - [ ] Assessments: deterministic, explainable baseline quiz and results; avoid unsupported “adaptive” claims.
 - [ ] AI Mentor: define a server-side API contract and safe deployment approach before connecting a model; no provider secrets in Vite client variables.
 - [ ] Scholarships and Opportunities: define verified source, freshness date, eligibility fields, application URL, and update owner before presenting listings as real.

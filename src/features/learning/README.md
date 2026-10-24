@@ -14,7 +14,7 @@ The Learning Hub is a catalogue of links to third-party learning materials, not 
 
 ## Source and rights notes
 
-Each record keeps the publisher name, target URL, source URL, source review date, resource type, and a rights note. Links were checked on 25 October 2026. This is a link review date, not a guarantee that providers will never change their content. Third-party resources remain subject to the provider's terms and any license shown at the destination.
+Each record keeps the publisher name, target URL, source URL, source review date, resource type, a provider-specific license/terms label, a link to the relevant rights page, a concise reuse note, and a rights-review date. MDN documentation and Python documentation have explicit source-documented license information; Microsoft Learn, Khan Academy, and GitHub Skills are labelled as provider terms with no blanket reuse license assumed. These entries are links only, not redistributed content. Links and rights pages were checked on 25 October 2026; this date is not a guarantee that providers will never change their content.
 
 ## Included providers
 
