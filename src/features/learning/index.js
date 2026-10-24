@@ -2,7 +2,7 @@ import {
   LEARNING_CATEGORIES,
   LEARNING_RESOURCES,
   filterLearningResources,
-} from './learningCatalog';
+} from './learningCatalog.js';
 
 export const FEATURE_KEY = 'learning';
 

@@ -8,7 +8,6 @@ import {
   Search,
 } from 'lucide-react';
 import { useProfile } from '../../context/ProfileContext';
-import { markLearningResourceComplete, markLearningResourceIncomplete } from '../../services/firestore';
 import { Badge } from '../../design-system/Badge';
 import { Button } from '../../design-system/Button';
 import { Card, CardBody, CardDescription, CardHeader, CardTitle } from '../../design-system/Card';
