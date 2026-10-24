@@ -6,4 +6,13 @@ export {
   scoreCareerInterestCheckin,
 } from './careerInterestCheckin.js';
 
+export {
+  ASSESSMENT_DOMAINS,
+  ASSESSMENT_QUESTIONS,
+  ASSESSMENT_VERSION,
+  createAssessmentRecord,
+  normalizeAssessmentRecord,
+  scoreAssessment,
+} from './assessmentEngine.js';
+
 export const FEATURE_KEY = 'assessments';

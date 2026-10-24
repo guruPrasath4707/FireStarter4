@@ -50,7 +50,8 @@ This is the working checklist for improving the existing application without pre
 
 ### 5. Working student features (incremental, not fake integrations)
 - [x] Learning Hub: curated starter catalogue with publisher/source/rights metadata, topic/interest filters, and Firestore-persisted self-reported completion.
-- [x] Assessments: implement an eight-question deterministic career-interest check-in, show the full tag-score breakdown, and save latest results without aptitude/adaptive claims.
+- [x] Career-interest check-in: eight-question deterministic self-reflection, full tag-score breakdown, and saved latest preference result without aptitude/career-prediction claims.
+- [x] Foundations check-in: separate fixed eight-question knowledge quiz, deterministic domain scoring, answer explanations, Learning Hub resource suggestions, validated last-result persistence, and regression tests. Not adaptive and not a validated proficiency test.
 - [ ] AI Mentor: define a server-side API contract and safe deployment approach before connecting a model; no provider secrets in Vite client variables.
 - [ ] Scholarships and Opportunities: define verified source, freshness date, eligibility fields, application URL, and update owner before presenting listings as real.
 - [x] Dashboard: derive profile metrics from saved records and link users into the working Learning Hub and saved-career filter.
@@ -79,4 +80,4 @@ Profile/dashboard reliability was completed and merged in PR #7. Profile forms r
 
 Learning Hub was completed and merged in PR #9. It provides a source-reviewed catalogue of external resources, interest filtering, and atomic self-reported completion state in Firestore; it does not host courses, verify external activity, or award certificates. External links and provider terms need periodic review.
 
-The career-interest check-in is in progress on `work/assessment-interest-checkin-2026-10-25`. Its eight prompts are a transparent self-reflection, with one point per selected activity tag and latest-result persistence; it makes no aptitude or career-success prediction. CI must pass before this milestone is considered validated.
+The career-interest self-reflection is merged on `main`; its eight prompts count selected activity-preference tags, with no right/wrong answers or career-success prediction. The separate foundations knowledge check is implemented on `work/assessments-two-modes-2026-10-25`. It uses eight fixed questions, deterministic domain scores, answer explanations, resource suggestions, and a distinct saved-result field so it cannot overwrite the existing self-reflection result. CI must pass before the knowledge-check work is considered verified.

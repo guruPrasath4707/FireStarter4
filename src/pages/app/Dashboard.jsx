@@ -23,6 +23,7 @@ export default function Dashboard() {
   const studyMinutes = Number(profile?.dailyStudyGoal) || 30;
   const interests = Array.isArray(profile?.interests) ? profile.interests : [];
   const savedCareerIds = Array.isArray(profile?.savedCareerIds) ? profile.savedCareerIds : [];
+  const lastFoundationsAssessment = profile?.lastFoundationsAssessment || null;
   const completeness = getProfileCompleteness(profile);
   const hasSuggestedSteps = completeness.missingSteps.length > 0;
 
@@ -118,6 +119,20 @@ export default function Dashboard() {
               <ArrowRight size={16} className="text-slate-400" />
             </Link>
             <Link
+              to="/assessments?mode=foundations"
+              className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5 hover:bg-slate-50 transition-colors"
+            >
+              <div className="h-9 w-9 rounded-lg bg-slate-100 text-slate-700 grid place-items-center">
+                <ClipboardCheck size={16} />
+              </div>
+              <div className="flex-1 text-sm text-slate-700">
+                {lastFoundationsAssessment
+                  ? 'Review foundations check-in (' + lastFoundationsAssessment.score + '/' + lastFoundationsAssessment.total + ')'
+                  : 'Take a foundations knowledge check'}
+              </div>
+              <ArrowRight size={16} className="text-slate-400" />
+            </Link>
+            <Link
               to="/careers?saved=1"
               className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5 hover:bg-slate-50 transition-colors"
             >
@@ -147,7 +162,7 @@ export default function Dashboard() {
             <EmptyState
               icon={BookOpen}
               title="More student tools are in development"
-              description="Assessments, AI Mentor, Scholarships, and Opportunities are not connected yet. Use the Learning Hub for a curated set of external resources with saved self-reported completion."
+              description="AI Mentor, Scholarships, and Opportunities still need their underlying services or verified source data. Your two assessments and the Learning Hub are available above."
               action={
                 <Button as={Link} to="/learning" variant="outline">
                   Open Learning Hub

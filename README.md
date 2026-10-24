@@ -2,7 +2,7 @@
 
 Pathlight is a React single-page application for student career exploration and learning planning. It uses Vite for development and production builds, Firebase Authentication for sign-in, and Cloud Firestore for user profiles.
 
-> **Implementation status:** this repository is an evolving prototype, not a finished full-stack product. The Career Explorer uses local catalogue data, and the Learning Hub links to curated third-party material with self-reported completion tracking. The career-interest check-in is an eight-question, deterministic self-reflection; AI Mentor, Scholarships, and Opportunities remain unfinished. No backend service is included in this repository.
+> **Implementation status:** this repository is an evolving prototype, not a finished full-stack product. The Career Explorer uses local catalogue data, and the Learning Hub links to curated third-party material with self-reported completion tracking. Assessments includes an eight-question career-interest self-reflection and a separate eight-question knowledge practice check-in; AI Mentor, Scholarships, and Opportunities remain unfinished. No backend service is included in this repository.
 
 ## What is implemented
 
@@ -12,6 +12,7 @@ Pathlight is a React single-page application for student career exploration and 
 - **Career Explorer:** searchable/filterable career cards and detail pages driven by local catalogue data. Interest overlap is derived from explicit profile tags; it is not an AI recommendation model. Salary ranges and market outlook labels in the catalogue remain illustrative placeholders.
 - **Learning Hub:** six reviewed links to external educational resources, search/topic/interest filtering, provider-source and rights notes, and Firestore-persisted self-reported completion. Pathlight does not host the third-party lessons or verify activity on those sites.
 - **Career interest check-in:** an eight-question, deterministic self-reflection with per-tag choice counts and the latest result saved to the user's profile. It is not a standardized aptitude, psychological, or career-prediction assessment.
+- **Foundations check-in:** a separate eight-question knowledge practice quiz with per-topic scores, answer explanations, Learning Hub resource suggestions, and its own last-result field. It is fixed, not adaptive, and not a validated proficiency test; raw answer selections are not stored in the profile.
 - **Application shell:** protected routes, dashboard, profile/settings screens, reusable UI/design-system components, and an English-only interface until complete translations are available.
 - **API client foundation:** a small fetch client exists for a future backend. It does not mean the backend is included or deployed.
 
@@ -74,7 +75,7 @@ Pathlight is a React single-page application for student career exploration and 
 | `npm run build` | Create a production build in `dist/` |
 | `npm run preview` | Preview the built app locally |
 
-There is a Node.js built-in unit test suite for route decisions, Firebase environment validation, career-interest matching, profile-form logic, Learning Hub resources, and career-interest assessment scoring. CI runs `npm ci`, `npm test`, and `npm run build`; a successful build is not proof that Firebase rules, authentication flows, or all UI interactions work end to end.
+There is a Node.js built-in unit test suite for route decisions, Firebase environment validation, career-interest matching, profile-form logic, Learning Hub resources, and career-interest and foundations assessment scoring, including persisted-result validation. CI runs `npm ci`, `npm test`, and `npm run build`; a successful build is not proof that Firebase rules, authentication flows, or all UI interactions work end to end.
 
 ## Environment variables
 
@@ -91,7 +92,7 @@ src/
   design-system/    Reusable visual components and tokens
   features/careers/ Career Explorer, details, service, and catalogue data
   features/learning/ Curated external resource catalogue and learning filters
-  features/assessments/ Question set and transparent career-interest scoring
+  features/assessments/ Career-interest reflection and knowledge-check scoring
   layouts/          Public, authenticated, and auth layouts
   pages/            Public, auth, app, and placeholder pages
   routes/           Route definitions and navigation metadata
@@ -100,14 +101,10 @@ src/
   i18n.js            i18next initialization
 ```
 
-## Current priorities
+## Implementation roadmap
 
-1. Establish repeatable CI and local configuration (this baseline).
-2. Add tests around authentication/profile behavior and career filtering.
-3. Replace placeholder screens incrementally with working, accessible features.
-4. Replace mock career data only after a real data source and recommendation criteria are defined.
-5. Add an actual backend only when its API contract, authorization, deployment, and error handling are ready.
+See [the implementation plan](docs/IMPLEMENTATION_PLAN.md) for the current prioritized checklist, completed milestones, known limitations, and next implementation tasks.
 
 ## Contributing
 
-Work on a feature branch, keep secrets and local environment files out of commits, run `npm ci` and `npm run build`, and open a pull request with a summary of behavior changes and test results.
+Work on a feature branch, keep secrets and local environment files out of commits, run `npm ci`, `npm test`, and `npm run build`, and open a pull request with a summary of behavior changes and test results.
