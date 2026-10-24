@@ -1,14 +1,26 @@
+import {
+  LEARNING_CATEGORIES,
+  LEARNING_RESOURCES,
+  filterLearningResources,
+} from './learningCatalog';
+
 export const FEATURE_KEY = 'learning';
 
 export {
   LEARNING_CATEGORIES,
   LEARNING_RESOURCES,
   filterLearningResources,
-  getLearningProgress,
-} from './learningCatalog';
+};
 
 export const learningService = {
-  list: () => import('../../services/apiClient').then((m) => m.apiClient.get('/learning')),
+  list(options = {}) {
+    const items = filterLearningResources(LEARNING_RESOURCES, options);
+    return {
+      items,
+      total: items.length,
+      categories: LEARNING_CATEGORIES,
+    };
+  },
 };
 
 export default { FEATURE_KEY, learningService };

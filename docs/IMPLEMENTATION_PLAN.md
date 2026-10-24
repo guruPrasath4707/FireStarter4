@@ -49,7 +49,7 @@ This is the working checklist for improving the existing application without pre
 - [x] Remove language choices that imply translations are complete when only English is implemented; communicate English-only availability honestly.
 
 ### 5. Working student features (incremental, not fake integrations)
-- [ ] Learning Hub: curated starter catalogue with clear source/license metadata and working completion state.
+- [x] Learning Hub: curated external starter catalogue with source/license notes, search/topic/completion filters, and Firestore-backed self-reported completion state. CI passed for tests and production build; completion is not provider-verified.
 - [ ] Assessments: deterministic, explainable baseline quiz and results; avoid unsupported “adaptive” claims.
 - [ ] AI Mentor: define a server-side API contract and safe deployment approach before connecting a model; no provider secrets in Vite client variables.
 - [ ] Scholarships and Opportunities: define verified source, freshness date, eligibility fields, application URL, and update owner before presenting listings as real.
@@ -75,4 +75,6 @@ Milestone 3 was completed and merged in PR #5. Interest overlap is calculated fr
 
 Milestone 4 was completed and merged in PR #6. The landing page identifies current feature status, removes fabricated testimonials and learner-count claims, provides a working FAQ, and replaces dead footer links with real project links and a notice that legal pages are not yet published.
 
-Milestone 5 foundation work is in progress on the profile-dashboard branch. Profile forms rehydrate only when clean, save changes are validated and show errors, unsupported language choices are removed, inactive settings controls are replaced with status notes, and dashboard statistics are derived from saved profile data. CI must pass before this milestone is considered verified.
+Milestone 5 now has a working Learning Hub vertical slice on the learning-hub-catalog-completion branch: five official external resources, explicit source/license notes, filters, atomic Firestore completion tracking, and dashboard counts derived from valid catalogue IDs. Tests and the production build passed at commit 700ac3c. The completion status is self-reported and is not verified with the external providers.
+
+Next items in this milestone are a deterministic baseline assessment with explainable results, a defined server-side AI Mentor contract, and verifiable scholarship/opportunity sources. Do not mark these features complete until their behavior, provenance, and regression tests are implemented.

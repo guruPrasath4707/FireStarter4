@@ -5,6 +5,7 @@ import {
   filterLearningResources,
   getLearningProgress,
 } from '../src/features/learning/learningCatalog.js';
+import { learningService } from '../src/features/learning/index.js';
 
 test('curated resources have unique IDs, official source URLs, and provenance metadata', () => {
   const ids = LEARNING_RESOURCES.map((resource) => resource.id);
@@ -75,4 +76,11 @@ test('progress ignores duplicate and unknown completion IDs and safely handles e
     remaining: 0,
     percentage: 0,
   });
+});
+
+test('learning service returns the local curated catalogue and supports filtering without a backend', () => {
+  const result = learningService.list({ query: 'github' });
+  assert.equal(result.total, 1);
+  assert.equal(result.items[0].id, 'github-skills-intro');
+  assert.ok(result.categories.length > 1);
 });
