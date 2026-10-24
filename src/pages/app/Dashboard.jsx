@@ -128,13 +128,18 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <Section title="Other tools" subtitle="These areas are still being developed and are not represented as working services yet.">
+      <Section title="More tools in development" subtitle="Learning Hub is available now; the remaining tools still need working services or verified source data.">
         <Card>
           <CardBody>
             <EmptyState
               icon={BookOpen}
-              title="Learning tools are in development"
-              description="Learning Hub, assessments, AI Mentor, scholarships, and opportunities will be added when their underlying content and services are ready."
+              title="More student tools are in development"
+              description="Assessments, AI Mentor, Scholarships, and Opportunities are not connected yet. Use the Learning Hub for a curated set of external resources with saved self-reported completion."
+              action={
+                <Button as={Link} to="/learning" variant="outline">
+                  Open Learning Hub
+                </Button>
+              }
             />
           </CardBody>
         </Card>

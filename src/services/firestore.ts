@@ -22,6 +22,7 @@ export type UserProfileDoc = {
   dailyStudyGoal: number;
   onboardingCompleted: boolean;
   savedCareerIds?: string[];
+  completedLearningResourceIds?: string[];
   updatedAt?: unknown;
 };
 
@@ -80,6 +81,32 @@ export async function removeCareerFromUserPath(uid: string, careerId: string): P
     profileRef(uid),
     {
       savedCareerIds: arrayRemove(careerId),
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true },
+  );
+}
+
+/** Save a self-reported external learning-resource completion. */
+export async function markLearningResourceComplete(uid: string, resourceId: string): Promise<void> {
+  if (!resourceId?.trim()) throw new Error('A learning resource id is required.');
+  await setDoc(
+    profileRef(uid),
+    {
+      completedLearningResourceIds: arrayUnion(resourceId),
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true },
+  );
+}
+
+/** Remove a self-reported completion without changing other profile fields. */
+export async function reopenLearningResource(uid: string, resourceId: string): Promise<void> {
+  if (!resourceId?.trim()) throw new Error('A learning resource id is required.');
+  await setDoc(
+    profileRef(uid),
+    {
+      completedLearningResourceIds: arrayRemove(resourceId),
       updatedAt: serverTimestamp(),
     },
     { merge: true },

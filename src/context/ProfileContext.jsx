@@ -7,7 +7,9 @@ import React, {
 } from 'react';
 import { useAuth } from './AuthContext';
 import {
+  markLearningResourceComplete,
   removeCareerFromUserPath,
+  reopenLearningResource,
   saveCareerToUserPath,
   setUserProfile,
   subscribeUserProfile,
@@ -27,6 +29,9 @@ function normalize(doc) {
     dailyStudyGoal: Number(doc.dailyStudyGoal) || 30,
     onboardingCompleted: !!doc.onboardingCompleted,
     savedCareerIds: Array.isArray(doc.savedCareerIds) ? doc.savedCareerIds : [],
+    completedLearningResourceIds: Array.isArray(doc.completedLearningResourceIds)
+      ? doc.completedLearningResourceIds
+      : [],
     updatedAt: doc.updatedAt,
   };
 }
@@ -134,6 +139,32 @@ export function ProfileProvider({ children }) {
     setError(null);
   }
 
+  async function completeLearningResource(resourceId) {
+    if (!user) throw new Error('Not authenticated');
+    await markLearningResourceComplete(user.uid, resourceId);
+    setProfile((current) => {
+      const completed = current?.completedLearningResourceIds || [];
+      return normalize({
+        ...(current || {}),
+        completedLearningResourceIds: [...new Set([...completed, resourceId])],
+      });
+    });
+    setError(null);
+  }
+
+  async function reopenCompletedLearningResource(resourceId) {
+    if (!user) throw new Error('Not authenticated');
+    await reopenLearningResource(user.uid, resourceId);
+    setProfile((current) => {
+      const completed = current?.completedLearningResourceIds || [];
+      return normalize({
+        ...(current || {}),
+        completedLearningResourceIds: completed.filter((id) => id !== resourceId),
+      });
+    });
+    setError(null);
+  }
+
   const needsOnboarding =
     !!user && !loading && !error && (!profile || !profile.onboardingCompleted);
 
@@ -146,6 +177,8 @@ export function ProfileProvider({ children }) {
     updateProfile,
     saveCareer,
     removeSavedCareer,
+    completeLearningResource,
+    reopenCompletedLearningResource,
     retryProfile,
   };
 
