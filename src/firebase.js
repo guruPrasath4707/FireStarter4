@@ -1,4 +1,4 @@
-import { getApp, getApps, initializeApp } from 'firebase/app';
+import { getApps, initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import {
@@ -24,8 +24,9 @@ export const firebaseSetupMessage = FIREBASE_SETUP_MESSAGE;
 // Keep public pages usable without local credentials. Authentication and
 // Firestore operations are disabled until the required client configuration
 // is supplied; no placeholder Firebase project is ever initialized.
+const existingDefaultApp = getApps().find((candidate) => candidate.name === '[DEFAULT]');
 const app = firebaseConfigured
-  ? (getApps().length > 0 ? getApp() : initializeApp(firebaseConfig))
+  ? (existingDefaultApp ?? initializeApp(firebaseConfig))
   : null;
 
 export const auth = app ? getAuth(app) : null;

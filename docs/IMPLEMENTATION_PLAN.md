@@ -29,10 +29,10 @@ This is the working checklist for improving the existing application without pre
 - [x] Test the route-decision matrix with Node's built-in test runner.
 
 ### 2. Firebase configuration and data access
-- [ ] Remove duplicate Firebase app initialization and placeholder hard-coded configuration.
-- [ ] Make required client configuration explicit and show an actionable setup error.
-- [ ] Consolidate active Firestore profile access and remove conflicting access paths only after reference checks.
-- [ ] Document that Firestore Security Rules are a deployment requirement; client-side route guards are not data authorization.
+- [x] Remove duplicate Firebase app initialization and placeholder hard-coded configuration.
+- [x] Make required client configuration explicit and show an actionable setup error.
+- [x] Route the legacy profile service through the shared Firestore access layer instead of initializing its own Firebase client.
+- [x] Document that Firestore Security Rules are a deployment requirement; client-side route guards are not data authorization.
 
 ### 3. Career Explorer correctness
 - [ ] Replace misleading static “personalized” score labels with transparent, explainable interest matching.
@@ -69,4 +69,4 @@ This is the working checklist for improving the existing application without pre
 
 ## Current milestone
 
-Milestone 2 is in progress on the work branch. Firebase configuration is being consolidated and made safe for unconfigured local builds. The working branch has passing route regression tests and production build on the previous auth/profile commit; this Firebase configuration change still needs its own CI result.
+Milestone 2 implementation is complete on the work branch. One Firebase initialization source now owns configuration, missing configuration is detected before Auth/Firestore initialization, and the legacy database adapter delegates to the shared Firestore service. Completion remains subject to the current commit's CI result.
