@@ -1,4 +1,6 @@
 import {
+  arrayRemove,
+  arrayUnion,
   doc,
   getDoc,
   setDoc,
@@ -19,6 +21,7 @@ export type UserProfileDoc = {
   preferredLanguage: string;
   dailyStudyGoal: number;
   onboardingCompleted: boolean;
+  savedCareerIds?: string[];
   updatedAt?: unknown;
 };
 
@@ -55,6 +58,32 @@ export async function updateUserProfile(
   data: Partial<UserProfileDoc>,
 ): Promise<void> {
   await updateDoc(profileRef(uid), { ...data, updatedAt: serverTimestamp() } as DocumentData);
+}
+
+/** Atomically add a saved career without overwriting concurrent profile changes. */
+export async function saveCareerToUserPath(uid: string, careerId: string): Promise<void> {
+  if (!careerId?.trim()) throw new Error('A career id is required.');
+  await setDoc(
+    profileRef(uid),
+    {
+      savedCareerIds: arrayUnion(careerId),
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true },
+  );
+}
+
+/** Atomically remove a saved career without overwriting other profile fields. */
+export async function removeCareerFromUserPath(uid: string, careerId: string): Promise<void> {
+  if (!careerId?.trim()) throw new Error('A career id is required.');
+  await setDoc(
+    profileRef(uid),
+    {
+      savedCareerIds: arrayRemove(careerId),
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true },
+  );
 }
 
 export function subscribeUserProfile(

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search } from 'lucide-react';
+import { Bookmark, Search } from 'lucide-react';
 import { Input } from '../../../design-system/Input';
 import { Button } from '../../../design-system/Button';
 import { CATEGORIES } from '../data/careers.mock';
@@ -13,18 +13,35 @@ export function CareerFilters({
   category,
   onCategoryChange,
   total,
+  savedOnly = false,
+  onSavedOnlyChange,
+  savedCount = 0,
 }) {
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 h-11">
-        <Search size={16} className="text-slate-400 shrink-0" />
-        <Input
-          aria-label="Search careers"
-          placeholder="Search careers, skills, descriptions…"
-          value={query}
-          onChange={(e) => onQueryChange(e.target.value)}
-          className="h-11 border-0 px-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
-        />
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex min-w-0 flex-1 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 h-11">
+          <Search size={16} className="text-slate-400 shrink-0" />
+          <Input
+            aria-label="Search careers"
+            placeholder="Search careers, skills, descriptions…"
+            value={query}
+            onChange={(e) => onQueryChange(e.target.value)}
+            className="h-11 border-0 px-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+          />
+        </div>
+        {onSavedOnlyChange ? (
+          <Button
+            type="button"
+            variant={savedOnly ? 'primary' : 'outline'}
+            aria-pressed={savedOnly}
+            onClick={() => onSavedOnlyChange(!savedOnly)}
+            className="shrink-0"
+          >
+            <Bookmark size={15} />
+            Saved careers ({savedCount})
+          </Button>
+        ) : null}
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -51,6 +68,7 @@ export function CareerFilters({
           {category && category !== ALL ? (
             <> in <span className="font-medium text-slate-700">{labelFor(category)}</span></>
           ) : null}
+          {savedOnly ? ' in your saved list' : ''}
         </p>
       ) : null}
     </div>

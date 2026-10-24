@@ -6,7 +6,7 @@ This is the working checklist for improving the existing application without pre
 
 - React 18, Vite 5, React Router 7, and Tailwind CSS 4.
 - Firebase email/password auth and Firestore-backed user profiles are wired in the client.
-- Career Explorer reads a 12-item local mock catalogue; match scores are hard-coded demo values.
+- Career Explorer reads a 12-item local demo catalogue. Interest overlap is calculated from profile tags; salary and outlook values remain illustrative and unverified.
 - Learning Hub, AI Mentor, Assessments, Scholarships, and Opportunities are placeholder pages despite navigation entries and early service stubs.
 - No test suite existed at the audit baseline. The production build worked but did not detect the route/profile bugs noted below.
 - Multiple overlapping UI/layout and Firebase setup modules exist. A root-level Colleges.jsx appears to be legacy and is not part of the active route tree.
@@ -35,10 +35,11 @@ This is the working checklist for improving the existing application without pre
 - [x] Document that Firestore Security Rules are a deployment requirement; client-side route guards are not data authorization.
 
 ### 3. Career Explorer correctness
-- [ ] Replace misleading static “personalized” score labels with transparent, explainable interest matching.
-- [ ] Ensure no-interest, no-match, loading, and error states behave consistently.
-- [ ] Make “Add to my path” persist data or clearly mark it as unavailable instead of showing a false success.
-- [ ] Validate the sample catalogue and label salary/outlook data as illustrative until backed by dated sources.
+- [x] Replace misleading static “personalized” score labels with transparent, explainable interest matching.
+- [x] Ensure no-interest, no-match, loading, and error states behave consistently.
+- [x] Persist saved careers atomically and make saved careers discoverable/filterable in the Career Explorer.
+- [x] Clearly label salary ranges, market outlook and skill weights as illustrative catalogue content.
+- [ ] Validate salary/outlook catalogue data against dated authoritative sources before presenting it as current labour-market information.
 
 ### 4. Honest public experience and navigation
 - [ ] Remove invented testimonials, unsubstantiated learner-count claims, and misleading claims about features that are not implemented.
@@ -69,4 +70,4 @@ This is the working checklist for improving the existing application without pre
 
 ## Current milestone
 
-Milestone 2 implementation is complete on the work branch. One Firebase initialization source now owns configuration, missing configuration is detected before Auth/Firestore initialization, and the legacy database adapter delegates to the shared Firestore service. Completion remains subject to the current commit's CI result.
+Milestone 3 is in progress on the career-explorer work branch. Static match scores are being removed in favor of explicit interest overlap, and saved career actions are being connected to Firestore and the Saved careers filter.
