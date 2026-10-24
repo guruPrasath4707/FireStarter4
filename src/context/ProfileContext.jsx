@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { useAuth } from './AuthContext';
+import { normalizeAssessmentRecord } from '../features/assessments/assessmentEngine.js';
 import {
   markLearningResourceComplete,
   removeCareerFromUserPath,
@@ -37,6 +38,7 @@ function normalize(doc) {
       doc.latestAssessmentResult && typeof doc.latestAssessmentResult === 'object'
         ? doc.latestAssessmentResult
         : null,
+    lastFoundationsAssessment: normalizeAssessmentRecord(doc.lastFoundationsAssessment),
     updatedAt: doc.updatedAt,
   };
 }
@@ -178,6 +180,20 @@ export function ProfileProvider({ children }) {
     setError(null);
   }
 
+  async function saveFoundationsAssessmentResult(result) {
+    if (!user) throw new Error('Not authenticated');
+    const normalized = normalizeAssessmentRecord(result);
+    if (!normalized) {
+      throw new Error('The foundations assessment result is invalid or unsupported.');
+    }
+    await setUserProfile(user.uid, { lastFoundationsAssessment: normalized });
+    setProfile((current) => normalize({
+      ...(current || {}),
+      lastFoundationsAssessment: normalized,
+    }));
+    setError(null);
+  }
+
   const needsOnboarding =
     !!user && !loading && !error && (!profile || !profile.onboardingCompleted);
 
@@ -193,6 +209,7 @@ export function ProfileProvider({ children }) {
     completeLearningResource,
     reopenCompletedLearningResource,
     saveAssessmentResult,
+    saveFoundationsAssessmentResult,
     retryProfile,
   };
 

@@ -50,7 +50,8 @@ This is the working checklist for improving the existing application without pre
 
 ### 5. Working student features (incremental, not fake integrations)
 - [x] Learning Hub: curated starter catalogue with publisher/source metadata, provider-specific license/terms links, topic/interest filters, and Firestore-persisted self-reported completion.
-- [x] Assessments: implement an eight-question deterministic career-interest check-in, show the full tag-score breakdown, and save latest results without aptitude/adaptive claims.
+- [x] Career-interest check-in: eight-question deterministic self-reflection, full tag-score breakdown, and saved latest preference result without aptitude/career-prediction claims.
+- [x] Foundations check-in: separate fixed eight-question knowledge quiz, deterministic domain scoring, answer explanations, Learning Hub resource suggestions, validated last-result persistence, and regression tests. Not adaptive and not a validated proficiency test.
 - [ ] AI Mentor: define a server-side API contract and safe deployment approach before connecting a model; no provider secrets in Vite client variables.
 - [ ] Scholarships and Opportunities: define verified source, freshness date, eligibility fields, application URL, and update owner before presenting listings as real.
 - [x] Dashboard: derive profile metrics from saved records and link users into the working Learning Hub and saved-career filter.
@@ -81,4 +82,6 @@ Learning Hub was completed and merged in PR #9. It provides a source-reviewed ca
 
 The career-interest check-in was completed and merged in PR #11. Its eight prompts are a transparent self-reflection, with one point per selected activity tag and latest-result persistence; it makes no aptitude or career-success prediction.
 
-The Learning Hub rights metadata follow-up is being validated on `work/learning-resource-rights-current-2026-10-25`. It adds provider-specific license/terms links while distinguishing documentation licensing guidance from general service terms. CI must pass before this follow-up is merged.
+Learning Hub rights metadata was merged in PR #12. Resource cards include provider-specific license/terms links and distinguish source-documented licenses from general service terms; external links and terms still require periodic review.
+
+The career-interest self-reflection was completed and merged in PR #11; it records current activity preferences without right/wrong answers or career-success predictions. The separate foundations knowledge check is implemented on `work/foundations-checkin-two-modes-2026-10-25`. It uses eight fixed questions, deterministic domain scores, answer explanations, mapped Learning Hub suggestions, and a distinct saved-result field that does not overwrite the career-interest result. CI must pass before the knowledge-check work is considered verified.

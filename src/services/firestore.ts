@@ -34,6 +34,20 @@ export type UserProfileDoc = {
   savedCareerIds?: string[];
   completedLearningResourceIds?: string[];
   latestAssessmentResult?: CareerInterestAssessmentResult | null;
+  lastFoundationsAssessment?: {
+    version: string;
+    completedAt: string;
+    score: number;
+    total: number;
+    categoryScores: Record<string, {
+      label: string;
+      score: number;
+      total: number;
+      resourceId: string;
+    }>;
+    recommendedResourceIds: string[];
+    recommendationMode: 'practice' | 'reinforcement';
+  } | null;
   updatedAt?: unknown;
 };
 
