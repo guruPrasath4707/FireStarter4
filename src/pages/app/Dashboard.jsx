@@ -4,6 +4,7 @@ import {
   ArrowRight,
   BookOpen,
   Compass,
+  ClipboardCheck,
   UserRound,
 } from 'lucide-react';
 import { useProfile } from '../../context/ProfileContext';
@@ -22,6 +23,7 @@ export default function Dashboard() {
   const studyMinutes = Number(profile?.dailyStudyGoal) || 30;
   const interests = Array.isArray(profile?.interests) ? profile.interests : [];
   const savedCareerIds = Array.isArray(profile?.savedCareerIds) ? profile.savedCareerIds : [];
+  const lastAssessment = profile?.lastAssessment || null;
   const completeness = getProfileCompleteness(profile);
   const hasSuggestedSteps = completeness.missingSteps.length > 0;
 
@@ -128,18 +130,46 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <Section title="More tools in development" subtitle="Learning Hub is available now; the remaining tools still need working services or verified source data.">
+      <Section
+        title="Foundations check-in"
+        subtitle="A fixed practice quiz with an explainable topic breakdown, not an adaptive or validated proficiency test."
+      >
+        <Card>
+          <CardBody className="p-5 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <div className="h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 grid place-items-center">
+                  <ClipboardCheck size={18} />
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold text-slate-900">Programming, web and developer basics</h3>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {lastAssessment
+                      ? 'Latest saved score: ' + lastAssessment.score + ' / ' + lastAssessment.total
+                      : 'No saved result yet. Complete the eight-question check-in to get a topic breakdown.'}
+                  </p>
+                  {lastAssessment ? (
+                    <p className="mt-1 text-xs text-slate-500">
+                      Last completed {new Date(lastAssessment.completedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}. Suggestions are based on topic scores and link into the Learning Hub providers.
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+              <Button as={Link} to="/assessments" variant="outline">
+                {lastAssessment ? 'Review or retake' : 'Start check-in'}
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
+      </Section>
+
+      <Section title="Other tools in development" subtitle="These require server-side services or verified external listings before they can be represented as working features.">
         <Card>
           <CardBody>
             <EmptyState
               icon={BookOpen}
               title="More student tools are in development"
-              description="Assessments, AI Mentor, Scholarships, and Opportunities are not connected yet. Use the Learning Hub for a curated set of external resources with saved self-reported completion."
-              action={
-                <Button as={Link} to="/learning" variant="outline">
-                  Open Learning Hub
-                </Button>
-              }
+              description="AI Mentor, Scholarships, and Opportunities are not connected yet. No backend service is included in this repository."
             />
           </CardBody>
         </Card>

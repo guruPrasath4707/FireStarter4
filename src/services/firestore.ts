@@ -23,6 +23,20 @@ export type UserProfileDoc = {
   onboardingCompleted: boolean;
   savedCareerIds?: string[];
   completedLearningResourceIds?: string[];
+  lastAssessment?: {
+    version: string;
+    completedAt: string;
+    score: number;
+    total: number;
+    categoryScores: Record<string, {
+      label: string;
+      score: number;
+      total: number;
+      resourceId: string;
+    }>;
+    recommendedResourceIds: string[];
+    recommendationMode: 'practice' | 'reinforcement';
+  } | null;
   updatedAt?: unknown;
 };
 

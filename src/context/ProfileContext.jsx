@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { useAuth } from './AuthContext';
+import { normalizeAssessmentRecord } from '../features/assessments/assessmentEngine.js';
 import {
   markLearningResourceComplete,
   removeCareerFromUserPath,
@@ -32,6 +33,7 @@ function normalize(doc) {
     completedLearningResourceIds: Array.isArray(doc.completedLearningResourceIds)
       ? doc.completedLearningResourceIds
       : [],
+    lastAssessment: normalizeAssessmentRecord(doc.lastAssessment),
     updatedAt: doc.updatedAt,
   };
 }
@@ -165,6 +167,15 @@ export function ProfileProvider({ children }) {
     setError(null);
   }
 
+  async function saveAssessmentResult(result) {
+    if (!user) throw new Error('Not authenticated');
+    const normalized = normalizeAssessmentRecord(result);
+    if (!normalized) throw new Error('The assessment result is invalid or unsupported.');
+    await setUserProfile(user.uid, { lastAssessment: normalized });
+    setProfile((current) => normalize({ ...(current || {}), lastAssessment: normalized }));
+    setError(null);
+  }
+
   const needsOnboarding =
     !!user && !loading && !error && (!profile || !profile.onboardingCompleted);
 
@@ -179,6 +190,7 @@ export function ProfileProvider({ children }) {
     removeSavedCareer,
     completeLearningResource,
     reopenCompletedLearningResource,
+    saveAssessmentResult,
     retryProfile,
   };
 

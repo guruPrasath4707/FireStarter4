@@ -50,7 +50,7 @@ This is the working checklist for improving the existing application without pre
 
 ### 5. Working student features (incremental, not fake integrations)
 - [x] Learning Hub: curated starter catalogue with publisher/source/rights metadata, topic/interest filters, and Firestore-persisted self-reported completion.
-- [ ] Assessments: deterministic, explainable baseline quiz and results; avoid unsupported “adaptive” claims.
+- [x] Assessments: eight-question, fixed-structure foundations check-in; deterministic overall/topic scoring, explanatory feedback, Learning Hub resource suggestions, persisted latest result, input/record validation, and regression tests. No adaptive or validated-proficiency claims.
 - [ ] AI Mentor: define a server-side API contract and safe deployment approach before connecting a model; no provider secrets in Vite client variables.
 - [ ] Scholarships and Opportunities: define verified source, freshness date, eligibility fields, application URL, and update owner before presenting listings as real.
 - [x] Dashboard: derive profile metrics from saved records and link users into the working Learning Hub and saved-career filter.
@@ -77,4 +77,6 @@ Milestone 4 was completed and merged in PR #6. The landing page identifies curre
 
 Profile/dashboard reliability was completed and merged in PR #7. Profile forms rehydrate only when clean, save changes are validated with visible feedback, unsupported language choices are removed, inactive settings controls are replaced with status notes, and dashboard statistics are derived from saved profile data.
 
-Learning Hub implementation and CI validation are complete on `work/learning-hub-catalogue-progress-2026-10-25`. It provides a source-reviewed, attribution-first catalogue of external resources, explicit interest-tag filtering, and atomic self-reported completion state stored in Firestore. It does not claim to host courses, verify external activity, or award certificates. The feature is ready for pull-request review; external links and provider terms will need periodic review.
+Learning Hub is implemented and CI-tested on main. It provides source-reviewed external resource links, transparent interest-tag matching, and atomic self-reported completion stored in Firestore; it does not host courses, verify activity, or award certificates. A follow-up PR adds provider-specific rights-page links and distinguishes known licenses from provider terms where a blanket reuse license was not verified.
+
+The foundations assessment is implemented on `work/deterministic-foundations-assessment-2026-10-25`: eight fixed questions, deterministic scoring across four domains, feedback/explanations, suggestions mapped to existing Learning Hub resources, and a validated last-result record stored on the profile. It is a small practice check, not adaptive or a validated measure of general ability. CI must pass before this milestone is considered verified.
