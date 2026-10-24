@@ -8,7 +8,7 @@ import {
   type DocumentData,
   type Firestore,
 } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db, firebaseSetupMessage } from '../firebase';
 
 export type UserProfileDoc = {
   name: string;
@@ -24,12 +24,17 @@ export type UserProfileDoc = {
 
 const COLLECTION = 'users';
 
-function ref(dbInstance: Firestore, uid: string) {
-  return doc(dbInstance, COLLECTION, uid);
+function requireDatabase(): Firestore {
+  if (!db) throw new Error(firebaseSetupMessage);
+  return db;
+}
+
+function profileRef(uid: string) {
+  return doc(requireDatabase(), COLLECTION, uid);
 }
 
 export async function getUserProfile(uid: string): Promise<UserProfileDoc | null> {
-  const snap = await getDoc(ref(db, uid));
+  const snap = await getDoc(profileRef(uid));
   return snap.exists() ? (snap.data() as UserProfileDoc) : null;
 }
 
@@ -39,7 +44,7 @@ export async function setUserProfile(
   { merge = true }: { merge?: boolean } = {},
 ): Promise<void> {
   await setDoc(
-    ref(db, uid),
+    profileRef(uid),
     { ...data, updatedAt: serverTimestamp() },
     { merge },
   );
@@ -49,7 +54,7 @@ export async function updateUserProfile(
   uid: string,
   data: Partial<UserProfileDoc>,
 ): Promise<void> {
-  await updateDoc(ref(db, uid), { ...data, updatedAt: serverTimestamp() } as DocumentData);
+  await updateDoc(profileRef(uid), { ...data, updatedAt: serverTimestamp() } as DocumentData);
 }
 
 export function subscribeUserProfile(
@@ -58,7 +63,7 @@ export function subscribeUserProfile(
   onError?: (err: unknown) => void,
 ): () => void {
   return onSnapshot(
-    ref(db, uid),
+    profileRef(uid),
     (snap) => cb(snap.exists() ? (snap.data() as UserProfileDoc) : null),
     (err) => {
       // eslint-disable-next-line no-console

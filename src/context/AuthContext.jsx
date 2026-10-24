@@ -1,6 +1,5 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '../firebase';
+import { auth, firebaseConfigured, firebaseSetupMessage } from '../firebase';
 import {
   onAuthStateChanged,
   signOut,
@@ -11,49 +10,85 @@ import {
 
 const AuthContext = createContext(null);
 
+function requireAuth() {
+  if (!firebaseConfigured || !auth) {
+    throw new Error(firebaseSetupMessage);
+  }
+  return auth;
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
-      setUser(u);
+    if (!firebaseConfigured || !auth) {
+      setUser(null);
       setLoading(false);
-    });
-    return () => unsub();
+      return undefined;
+    }
+
+    let active = true;
+    const unsub = onAuthStateChanged(
+      auth,
+      (nextUser) => {
+        if (!active) return;
+        setUser(nextUser);
+        setLoading(false);
+      },
+      () => {
+        if (!active) return;
+        setUser(null);
+        setLoading(false);
+      },
+    );
+
+    return () => {
+      active = false;
+      unsub();
+    };
   }, []);
 
   async function signup({ name, email, password }) {
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
-    if (name) {
+    const client = requireAuth();
+    const cred = await createUserWithEmailAndPassword(client, email, password);
+    if (name?.trim()) {
       try {
-        await fbUpdateProfile(cred.user, { displayName: name });
+        await fbUpdateProfile(cred.user, { displayName: name.trim() });
       } catch {
-        // Non-fatal: profile display name can be set later.
+        // Creating the account is the primary operation; name can be edited later.
       }
     }
     return cred.user;
   }
 
   async function login({ email, password }) {
-    const { user } = await signInWithEmailAndPassword(auth, email, password);
-    return user;
+    const client = requireAuth();
+    const { user: signedInUser } = await signInWithEmailAndPassword(client, email, password);
+    return signedInUser;
   }
 
   async function logout() {
-    await signOut(auth);
+    await signOut(requireAuth());
   }
 
   async function syncDisplayName(name) {
-    if (!auth.currentUser || !name?.trim()) return;
-    try {
-      await fbUpdateProfile(auth.currentUser, { displayName: name.trim() });
-    } catch {
-      // Non-fatal.
-    }
+    const client = requireAuth();
+    if (!client.currentUser || !name?.trim()) return;
+    await fbUpdateProfile(client.currentUser, { displayName: name.trim() });
   }
 
-  const value = { user, loading, signup, login, logout, syncDisplayName };
+  const value = {
+    user,
+    loading,
+    firebaseConfigured,
+    firebaseSetupMessage,
+    signup,
+    login,
+    logout,
+    syncDisplayName,
+  };
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

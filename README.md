@@ -25,7 +25,7 @@ Pathlight is a React single-page application for student career exploration and 
 
 - Node.js 20 or a compatible supported Node.js version
 - npm (the lockfile is committed; use `npm ci` for reproducible installs)
-- A Firebase project with **Email/Password Authentication** enabled and Cloud Firestore configured to use the app
+- A Firebase project with **Email/Password Authentication** enabled and Cloud Firestore configured to use the app. The public landing page can load without Firebase variables; login and registration will show setup instructions until the required values are configured.
 
 ## Run locally
 
