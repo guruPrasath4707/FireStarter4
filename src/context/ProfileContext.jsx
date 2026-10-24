@@ -6,7 +6,12 @@ import React, {
   useState,
 } from 'react';
 import { useAuth } from './AuthContext';
-import { setUserProfile, subscribeUserProfile } from '../services/firestore';
+import {
+  removeCareerFromUserPath,
+  saveCareerToUserPath,
+  setUserProfile,
+  subscribeUserProfile,
+} from '../services/firestore';
 
 const ProfileContext = createContext(null);
 
@@ -21,6 +26,7 @@ function normalize(doc) {
     preferredLanguage: doc.preferredLanguage || 'en',
     dailyStudyGoal: Number(doc.dailyStudyGoal) || 30,
     onboardingCompleted: !!doc.onboardingCompleted,
+    savedCareerIds: Array.isArray(doc.savedCareerIds) ? doc.savedCareerIds : [],
     updatedAt: doc.updatedAt,
   };
 }
@@ -98,7 +104,33 @@ export function ProfileProvider({ children }) {
   async function updateProfile(patch) {
     if (!user) throw new Error('Not authenticated');
     await setUserProfile(user.uid, patch);
-    setProfile(normalize({ ...(profile || {}), ...patch }));
+    setProfile((current) => normalize({ ...(current || {}), ...patch }));
+    setError(null);
+  }
+
+  async function saveCareer(careerId) {
+    if (!user) throw new Error('Not authenticated');
+    await saveCareerToUserPath(user.uid, careerId);
+    setProfile((current) => {
+      const ids = current?.savedCareerIds || [];
+      return normalize({
+        ...(current || {}),
+        savedCareerIds: [...new Set([...ids, careerId])],
+      });
+    });
+    setError(null);
+  }
+
+  async function removeSavedCareer(careerId) {
+    if (!user) throw new Error('Not authenticated');
+    await removeCareerFromUserPath(user.uid, careerId);
+    setProfile((current) => {
+      const ids = current?.savedCareerIds || [];
+      return normalize({
+        ...(current || {}),
+        savedCareerIds: ids.filter((id) => id !== careerId),
+      });
+    });
     setError(null);
   }
 
@@ -112,6 +144,8 @@ export function ProfileProvider({ children }) {
     needsOnboarding,
     completeOnboarding,
     updateProfile,
+    saveCareer,
+    removeSavedCareer,
     retryProfile,
   };
 

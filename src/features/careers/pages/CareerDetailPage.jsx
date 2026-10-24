@@ -4,7 +4,9 @@ import { CareerDetailHeader } from '../components/CareerDetailHeader';
 import { SkillBar } from '../components/SkillBar';
 import { RoadmapPreview } from '../components/RoadmapPreview';
 import { careersService } from '../services/careersService';
+import { getCareerInterestFit } from '../services/careerFit';
 import { CATEGORIES } from '../data/careers.mock';
+import { useProfile } from '../../../context/ProfileContext';
 import { Card, CardBody, CardHeader, CardTitle, CardDescription } from '../../../design-system/Card';
 import { Badge } from '../../../design-system/Badge';
 import { Spinner } from '../../../design-system/Spinner';
@@ -16,12 +18,20 @@ import { Compass, ArrowRight } from 'lucide-react';
 export default function CareerDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { profile, saveCareer, removeSavedCareer } = useProfile();
   const [career, setCareer] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState(null);
+  const [savingToPath, setSavingToPath] = useState(false);
   const toast = useToast();
+
+  const savedCareerIds = profile?.savedCareerIds ?? [];
+  const isSaved = Boolean(career && savedCareerIds.includes(career.id));
+  const fit = career
+    ? getCareerInterestFit(career.interests || [], profile?.interests || [])
+    : null;
 
   useEffect(() => {
     let alive = true;
@@ -40,18 +50,18 @@ export default function CareerDetailPage() {
           return;
         }
         setCareer(data);
-        const ids = (data.relatedCareers || []).slice(0, 3);
-        if (ids.length === 0) {
+        const relatedIds = (data.relatedCareers || []).slice(0, 3);
+        if (relatedIds.length === 0) {
           setRelated([]);
           return;
         }
-        const results = await Promise.all(ids.map((rid) => careersService.getById(rid)));
+        const results = await Promise.all(relatedIds.map((relatedId) => careersService.getById(relatedId)));
         if (!alive) return;
         setRelated(results.filter(Boolean));
       })
-      .catch((e) => {
+      .catch((loadError) => {
         if (!alive) return;
-        setError(e?.message || 'Unable to load career.');
+        setError(loadError?.message || 'Unable to load career.');
       })
       .finally(() => {
         if (alive) setLoading(false);
@@ -62,14 +72,34 @@ export default function CareerDetailPage() {
     };
   }, [id]);
 
-  function handleAddToPath() {
-    if (!career) return;
-    // Phase-4 placeholder: surface a confirmation. Persistence lands in a later phase.
-    toast?.({
-      title: `${career.title} added to your path`,
-      description: 'You can review your saved careers in the Learning Hub.',
-      tone: 'success',
-    });
+  async function handleToggleSaved() {
+    if (!career || savingToPath) return;
+    setSavingToPath(true);
+    try {
+      if (isSaved) {
+        await removeSavedCareer(career.id);
+        toast?.({
+          title: `${career.title} removed from your path`,
+          description: 'The career was removed from your saved list.',
+          tone: 'success',
+        });
+      } else {
+        await saveCareer(career.id);
+        toast?.({
+          title: `${career.title} saved to your path`,
+          description: 'Find it under Saved careers in Career Explorer.',
+          tone: 'success',
+        });
+      }
+    } catch (saveError) {
+      toast?.({
+        title: 'Could not update your path',
+        description: saveError?.message || 'Check your connection and try again.',
+        tone: 'danger',
+      });
+    } finally {
+      setSavingToPath(false);
+    }
   }
 
   if (loading) {
@@ -123,7 +153,13 @@ export default function CareerDetailPage() {
 
   return (
     <div className="space-y-6">
-      <CareerDetailHeader career={career} onAddToPath={handleAddToPath} />
+      <CareerDetailHeader
+        career={career}
+        fit={fit}
+        isSaved={isSaved}
+        savingToPath={savingToPath}
+        onToggleSaved={handleToggleSaved}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
@@ -131,7 +167,7 @@ export default function CareerDetailPage() {
             <CardHeader>
               <CardTitle>About this career</CardTitle>
               <CardDescription>
-                A grounded overview of what the role involves day to day.
+                A starting overview for exploration; verify role requirements with current professional sources.
               </CardDescription>
             </CardHeader>
             <CardBody>
@@ -143,14 +179,14 @@ export default function CareerDetailPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Skills you'll lean on</CardTitle>
+              <CardTitle>Skills to explore</CardTitle>
               <CardDescription>
-                Weights reflect how central each skill is to the role.
+                The relative weights below are illustrative examples, not measured or sourced job-analysis scores.
               </CardDescription>
             </CardHeader>
             <CardBody className="space-y-4">
-              {(career.skills || []).map((s) => (
-                <SkillBar key={s.name} skill={s} />
+              {(career.skills || []).map((skill) => (
+                <SkillBar key={skill.name} skill={skill} />
               ))}
             </CardBody>
           </Card>
@@ -165,15 +201,15 @@ export default function CareerDetailPage() {
               </CardHeader>
               <CardBody>
                 <ul className="divide-y divide-slate-100">
-                  {related.map((r) => (
-                    <li key={r.id}>
+                  {related.map((relatedCareer) => (
+                    <li key={relatedCareer.id}>
                       <Link
-                        to={`/careers/${r.slug || r.id}`}
+                        to={`/careers/${relatedCareer.slug || relatedCareer.id}`}
                         className="flex items-center justify-between gap-3 py-3 hover:bg-slate-50 -mx-2 px-2 rounded-lg transition-colors"
                       >
                         <div>
-                          <div className="text-sm font-medium text-slate-900">{r.title}</div>
-                          <div className="text-xs text-slate-500">{labelForCategory(r.category)}</div>
+                          <div className="text-sm font-medium text-slate-900">{relatedCareer.title}</div>
+                          <div className="text-xs text-slate-500">{labelForCategory(relatedCareer.category)}</div>
                         </div>
                         <ArrowRight size={16} className="text-slate-400" />
                       </Link>
@@ -190,7 +226,7 @@ export default function CareerDetailPage() {
             <CardHeader>
               <CardTitle>Roadmap preview</CardTitle>
               <CardDescription>
-                A rough path — durations vary by effort and background.
+                Example stages only; timelines vary with background, access and effort.
               </CardDescription>
             </CardHeader>
             <CardBody>
@@ -200,13 +236,15 @@ export default function CareerDetailPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Tags</CardTitle>
-              <CardDescription>What this career tends to click with.</CardDescription>
+              <CardTitle>Interest tags</CardTitle>
+              <CardDescription>
+                Tags used for the explicit overlap count shown above.
+              </CardDescription>
             </CardHeader>
             <CardBody>
               <div className="flex flex-wrap gap-1.5">
-                {(career.interests || []).map((i) => (
-                  <Badge key={i} tone="brand">{titleCase(i)}</Badge>
+                {(career.interests || []).map((interest) => (
+                  <Badge key={interest} tone="brand">{titleCase(interest)}</Badge>
                 ))}
               </div>
             </CardBody>
@@ -218,10 +256,10 @@ export default function CareerDetailPage() {
 }
 
 function labelForCategory(value) {
-  const c = CATEGORIES.find((x) => x.value === value);
-  return c ? c.label : value;
+  const category = CATEGORIES.find((item) => item.value === value);
+  return category ? category.label : value;
 }
 
-function titleCase(s) {
-  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+function titleCase(value) {
+  return value ? value.charAt(0).toLocaleUpperCase() + value.slice(1) : value;
 }

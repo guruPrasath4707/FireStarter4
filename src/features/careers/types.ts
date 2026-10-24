@@ -36,7 +36,6 @@ export type Career = {
   salaryRange: SalaryRange;
   growthOutlook: GrowthOutlook;
   difficulty: 1 | 2 | 3 | 4 | 5;
-  matchScore?: number; // 0–100
   interests: string[];
   skills: CareerSkill[];
   roadmap: RoadmapStage[];

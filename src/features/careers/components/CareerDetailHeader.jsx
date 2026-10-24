@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { Badge } from '../../../design-system/Badge';
 import { Button } from '../../../design-system/Button';
 import { CATEGORIES } from '../data/careers.mock';
+import { formatInterestLabel } from '../services/careerFit';
 
 const GROWTH_TONES = {
   positive: 'success',
@@ -11,13 +13,22 @@ const GROWTH_TONES = {
 };
 
 const GROWTH_LABELS = {
-  positive: 'Positive outlook',
-  steady: 'Steady outlook',
-  slow: 'Slow outlook',
+  positive: 'Demo: positive outlook',
+  steady: 'Demo: steady outlook',
+  slow: 'Demo: slow outlook',
 };
 
-export function CareerDetailHeader({ career, onAddToPath }) {
+export function CareerDetailHeader({
+  career,
+  fit,
+  isSaved = false,
+  savingToPath = false,
+  onToggleSaved,
+}) {
   const categoryLabel = labelForCategory(career.category);
+  const interestOverlap = fit?.hasSelectedInterests
+    ? `${fit.matchCount} of ${fit.selectedCount}`
+    : 'Not set';
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
@@ -36,9 +47,9 @@ export function CareerDetailHeader({ career, onAddToPath }) {
             <div className="flex flex-wrap items-center gap-2">
               <Badge tone="brand">{categoryLabel}</Badge>
               <Badge tone={GROWTH_TONES[career.growthOutlook] || 'default'}>
-                {GROWTH_LABELS[career.growthOutlook] || career.growthOutlook}
+                {GROWTH_LABELS[career.growthOutlook] || 'Illustrative outlook'}
               </Badge>
-              <Badge tone="default">Difficulty {career.difficulty}/5</Badge>
+              <Badge tone="default">Difficulty {career.difficulty}/5 (demo)</Badge>
             </div>
             <h1 className="mt-3 text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
               {career.title}
@@ -52,18 +63,33 @@ export function CareerDetailHeader({ career, onAddToPath }) {
             <Button variant="outline" as={Link} to="/careers">
               Browse more
             </Button>
-            <Button variant="brand" onClick={onAddToPath}>
-              Add to my path
+            <Button
+              variant={isSaved ? 'secondary' : 'brand'}
+              onClick={onToggleSaved}
+              disabled={savingToPath}
+              aria-pressed={isSaved}
+            >
+              {savingToPath ? (
+                'Updating…'
+              ) : isSaved ? (
+                <><BookmarkCheck size={15} /> Remove from my path</>
+              ) : (
+                <><Bookmark size={15} /> Add to my path</>
+              )}
             </Button>
           </div>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <Stat label="Match score" value={`${career.matchScore ?? 0}%`} />
-          <Stat label="Entry salary" value={career.salaryRange?.entry || '—'} />
-          <Stat label="Mid salary" value={career.salaryRange?.mid || '—'} />
-          <Stat label="Senior salary" value={career.salaryRange?.senior || '—'} />
+          <Stat label="Interest overlap" value={interestOverlap} />
+          <Stat label="Entry salary (demo)" value={career.salaryRange?.entry || '—'} />
+          <Stat label="Mid salary (demo)" value={career.salaryRange?.mid || '—'} />
+          <Stat label="Senior salary (demo)" value={career.salaryRange?.senior || '—'} />
         </div>
+        <p className="text-xs leading-relaxed text-slate-500">
+          Catalogue content is illustrative. Salary ranges, outlook labels, difficulty and skill weights have not been verified against dated labour-market sources.
+          {fit?.matchingInterests?.length ? ` Tags overlapping your profile: ${fit.matchingInterests.map(formatInterestLabel).join(', ')}.` : ''}
+        </p>
       </div>
     </div>
   );
@@ -79,8 +105,8 @@ function Stat({ label, value }) {
 }
 
 function labelForCategory(value) {
-  const c = CATEGORIES.find((x) => x.value === value);
-  return c ? c.label : value;
+  const category = CATEGORIES.find((item) => item.value === value);
+  return category ? category.label : value;
 }
 
 export default CareerDetailHeader;

@@ -19,7 +19,6 @@ export const CAREERS: Career[] = [
     },
     growthOutlook: 'positive',
     difficulty: 3,
-    matchScore: 92,
     interests: ['tech', 'math', 'making'],
     skills: [
       { name: 'Programming', weight: 90 },
@@ -69,7 +68,6 @@ export const CAREERS: Career[] = [
     },
     growthOutlook: 'positive',
     difficulty: 4,
-    matchScore: 81,
     interests: ['tech', 'math', 'science'],
     skills: [
       { name: 'Statistics', weight: 90 },
@@ -121,7 +119,6 @@ export const CAREERS: Career[] = [
     },
     growthOutlook: 'steady',
     difficulty: 5,
-    matchScore: 64,
     interests: ['science', 'math'],
     skills: [
       { name: 'Scientific Method', weight: 95 },
@@ -166,7 +163,6 @@ export const CAREERS: Career[] = [
     },
     growthOutlook: 'positive',
     difficulty: 4,
-    matchScore: 70,
     interests: ['science', 'health', 'making'],
     skills: [
       { name: 'Molecular Biology', weight: 85 },
@@ -213,7 +209,6 @@ export const CAREERS: Career[] = [
     },
     growthOutlook: 'positive',
     difficulty: 3,
-    matchScore: 76,
     interests: ['business', 'tech', 'languages'],
     skills: [
       { name: 'Communication', weight: 90 },
@@ -258,7 +253,6 @@ export const CAREERS: Career[] = [
     },
     growthOutlook: 'steady',
     difficulty: 2,
-    matchScore: 68,
     interests: ['business', 'math'],
     skills: [
       { name: 'SQL', weight: 80 },
@@ -305,7 +299,6 @@ export const CAREERS: Career[] = [
     },
     growthOutlook: 'positive',
     difficulty: 3,
-    matchScore: 78,
     interests: ['arts', 'tech', 'languages'],
     skills: [
       { name: 'Visual Design', weight: 80 },
@@ -350,7 +343,6 @@ export const CAREERS: Career[] = [
     },
     growthOutlook: 'steady',
     difficulty: 2,
-    matchScore: 60,
     interests: ['science', 'languages', 'arts'],
     skills: [
       { name: 'Writing', weight: 90 },
@@ -397,7 +389,6 @@ export const CAREERS: Career[] = [
     },
     growthOutlook: 'positive',
     difficulty: 5,
-    matchScore: 58,
     interests: ['health', 'languages'],
     skills: [
       { name: 'Empathy', weight: 95 },
@@ -442,7 +433,6 @@ export const CAREERS: Career[] = [
     },
     growthOutlook: 'positive',
     difficulty: 3,
-    matchScore: 72,
     interests: ['health', 'tech', 'math'],
     skills: [
       { name: 'SQL', weight: 85 },
@@ -489,7 +479,6 @@ export const CAREERS: Career[] = [
     },
     growthOutlook: 'steady',
     difficulty: 3,
-    matchScore: 66,
     interests: ['making', 'science', 'math'],
     skills: [
       { name: 'CAD', weight: 85 },
@@ -534,7 +523,6 @@ export const CAREERS: Career[] = [
     },
     growthOutlook: 'steady',
     difficulty: 3,
-    matchScore: 62,
     interests: ['making', 'science'],
     skills: [
       { name: 'Structural Analysis', weight: 85 },

@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Briefcase, TrendingUp } from 'lucide-react';
 import { Card, CardBody } from '../../../design-system/Card';
 import { Badge } from '../../../design-system/Badge';
-import { Progress } from '../../../design-system/Progress';
 import { CATEGORIES } from '../data/careers.mock';
+import { formatInterestLabel, getCareerInterestFit } from '../services/careerFit';
 
 const GROWTH_TONES = {
   positive: 'success',
@@ -13,9 +13,9 @@ const GROWTH_TONES = {
 };
 
 const GROWTH_LABELS = {
-  positive: 'Positive outlook',
-  steady: 'Steady outlook',
-  slow: 'Slow outlook',
+  positive: 'Demo: positive outlook',
+  steady: 'Demo: steady outlook',
+  slow: 'Demo: slow outlook',
 };
 
 const DIFFICULTY_LABELS = {
@@ -26,9 +26,10 @@ const DIFFICULTY_LABELS = {
   5: 'Hard',
 };
 
-export function CareerCard({ career }) {
+export function CareerCard({ career, interests = [], saved = false }) {
   const categoryLabel = labelForCategory(career.category);
   const skills = (career.skills || []).slice(0, 3);
+  const fit = getCareerInterestFit(career.interests || [], interests);
 
   return (
     <Link
@@ -40,7 +41,10 @@ export function CareerCard({ career }) {
         <CardBody className="p-6 flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <Badge tone="brand">{categoryLabel}</Badge>
+              <div className="flex flex-wrap gap-1.5">
+                <Badge tone="brand">{categoryLabel}</Badge>
+                {saved ? <Badge tone="success">Saved</Badge> : null}
+              </div>
               <h3 className="mt-3 text-base font-semibold text-slate-900 leading-snug">
                 {career.title}
               </h3>
@@ -61,23 +65,38 @@ export function CareerCard({ career }) {
           </div>
 
           <div className="grid grid-cols-2 gap-3 text-xs">
-            <Stat icon={TrendingUp} label="Outlook">
+            <Stat icon={TrendingUp} label="Catalogue outlook">
               <Badge tone={GROWTH_TONES[career.growthOutlook] || 'default'}>
-                {GROWTH_LABELS[career.growthOutlook] || career.growthOutlook}
+                {GROWTH_LABELS[career.growthOutlook] || 'Illustrative'}
               </Badge>
             </Stat>
-            <Stat label="Difficulty">
+            <Stat label="Difficulty (demo)">
               <span className="text-sm font-medium text-slate-900">
                 {DIFFICULTY_LABELS[career.difficulty] || career.difficulty}
               </span>
             </Stat>
           </div>
 
-          <div>
-            <Progress
-              value={career.matchScore ?? 0}
-              label="Match score"
-            />
+          <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
+            <div className="text-[11px] uppercase tracking-wide text-slate-500">
+              Interest overlap
+            </div>
+            {fit.hasSelectedInterests ? (
+              <>
+                <div className="mt-1 text-sm font-semibold text-slate-900">
+                  {fit.matchCount} of {fit.selectedCount} selected interests
+                </div>
+                <p className="mt-1 text-xs text-slate-600">
+                  {fit.matchCount > 0
+                    ? `Aligned tags: ${fit.matchingInterests.map(formatInterestLabel).join(', ')}`
+                    : 'No direct overlap with your selected interests.'}
+                </p>
+              </>
+            ) : (
+              <p className="mt-1 text-xs text-slate-600">
+                Add interests to your profile to compare tags.
+              </p>
+            )}
           </div>
 
           <div className="flex items-center justify-between pt-1 text-sm">

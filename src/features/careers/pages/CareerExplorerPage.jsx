@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useProfile } from '../../../context/ProfileContext';
 import { careersService } from '../services/careersService';
+import { getCareerInterestFit } from '../services/careerFit';
 import { CareerFilters } from '../components/CareerFilters';
 import { CareerGrid } from '../components/CareerGrid';
 import { PageHeader, Section, Stat } from '../../../components/layout/PageHeader';
@@ -8,33 +9,38 @@ import { Card, CardBody } from '../../../design-system/Card';
 import { Badge } from '../../../design-system/Badge';
 import { EmptyState } from '../../../components/layout/EmptyState';
 import { Button } from '../../../design-system/Button';
-import { Sparkles, Compass, Layers } from 'lucide-react';
+import { Compass, Layers, Tags } from 'lucide-react';
 
 const ALL = 'all';
+const EMPTY_INTERESTS = [];
+const EMPTY_SAVED_IDS = [];
 
 export default function CareerExplorerPage() {
   const { profile } = useProfile();
-  const interests = profile?.interests || [];
+  const interests = profile?.interests ?? EMPTY_INTERESTS;
+  const savedCareerIds = profile?.savedCareerIds ?? EMPTY_SAVED_IDS;
 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState(ALL);
+  const [showSavedOnly, setShowSavedOnly] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     let alive = true;
     setLoading(true);
     setError(null);
     careersService
-      .list({ interests })
-      .then((res) => {
+      .list()
+      .then((result) => {
         if (!alive) return;
-        setItems(res.items);
+        setItems(result.items);
       })
-      .catch((e) => {
+      .catch((loadError) => {
         if (!alive) return;
-        setError(e?.message || 'Unable to load careers.');
+        setError(loadError?.message || 'Unable to load careers.');
       })
       .finally(() => {
         if (alive) setLoading(false);
@@ -42,50 +48,59 @@ export default function CareerExplorerPage() {
     return () => {
       alive = false;
     };
-  }, [interests]);
+  }, [reloadKey]);
+
+  const rankedItems = useMemo(() => {
+    if (interests.length === 0) return items;
+    // A transparent tag-overlap count is used for ordering; no static mock
+    // score or unvalidated predictive claim is used.
+    return [...items].sort((a, b) => (
+      getCareerInterestFit(b.interests, interests).matchCount -
+      getCareerInterestFit(a.interests, interests).matchCount
+    ));
+  }, [items, interests]);
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return items.filter((c) => {
-      if (category !== ALL && c.category !== category) return false;
-      if (!q) return true;
+    const search = query.trim().toLocaleLowerCase();
+    return rankedItems.filter((career) => {
+      if (showSavedOnly && !savedCareerIds.includes(career.id)) return false;
+      if (category !== ALL && career.category !== category) return false;
+      if (!search) return true;
       const haystack = [
-        c.title,
-        c.shortDescription,
-        c.description,
-        ...c.skills.map((s) => s.name),
-      ]
-        .join(' ')
-        .toLowerCase();
-      return haystack.includes(q);
+        career.title,
+        career.shortDescription,
+        career.description,
+        ...career.skills.map((skill) => skill.name),
+      ].join(' ').toLocaleLowerCase();
+      return haystack.includes(search);
     });
-  }, [items, query, category]);
+  }, [rankedItems, query, category, showSavedOnly, savedCareerIds]);
 
-  const personalizedCount = items.filter(
-    (c) => Array.isArray(c.matchScore) ? false : (c.matchScore ?? 0) >= 70,
-  ).length;
+  const careersWithOverlap = useMemo(
+    () => items.filter((career) => getCareerInterestFit(career.interests, interests).matchCount > 0).length,
+    [items, interests],
+  );
 
   const topCategory = useMemo(() => {
     if (filtered.length === 0) return null;
     const counts = {};
-    for (const c of filtered) counts[c.category] = (counts[c.category] || 0) + 1;
-    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-    return sorted[0]?.[0] || null;
+    for (const career of filtered) {
+      counts[career.category] = (counts[career.category] || 0) + 1;
+    }
+    return Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || null;
   }, [filtered]);
 
   return (
     <div className="space-y-6">
       <PageHeader
         eyebrow="Career Explorer"
-        title="Find a career that fits you"
-        subtitle="Browse tracks aligned to your interests, or search by skill and role."
+        title="Explore career paths"
+        subtitle="Search the reference catalogue and compare its interest tags with your profile."
         actions={
           interests.length > 0 ? (
-            <Badge tone="brand" icon={Sparkles}>
-              Personalized for you
-            </Badge>
+            <Badge tone="brand" icon={Tags}>Interest matching</Badge>
           ) : (
-            <Badge tone="violet">Reference catalogue</Badge>
+            <Badge tone="default">Reference catalogue</Badge>
           )
         }
       />
@@ -98,28 +113,30 @@ export default function CareerExplorerPage() {
             category={category}
             onCategoryChange={setCategory}
             total={filtered.length}
+            savedOnly={showSavedOnly}
+            onSavedOnlyChange={setShowSavedOnly}
+            savedCount={savedCareerIds.length}
           />
         </CardBody>
       </Card>
 
       <Section
         title="At a glance"
-        subtitle="A snapshot of the careers matching your filters."
+        subtitle="Catalogue counts describe the current filters; interest overlap is a tag comparison, not a prediction."
       >
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <Stat
             icon={Layers}
             label="Showing"
             value={String(filtered.length)}
-            hint="matching your filters"
+            hint={showSavedOnly ? 'saved careers matching filters' : 'careers matching filters'}
             tone="brand"
           />
           <Stat
-            icon={Sparkles}
-            label="Personalized"
-            value={String(personalizedCount)}
-            hint="match score ≥ 70%"
-            tone="violet"
+            icon={Tags}
+            label="Interest overlap"
+            value={interests.length > 0 ? String(careersWithOverlap) : '—'}
+            hint={interests.length > 0 ? 'careers with at least one matching tag' : 'add interests in your profile'}
           />
           <Stat
             icon={Compass}
@@ -128,9 +145,9 @@ export default function CareerExplorerPage() {
             hint="based on current filters"
           />
           <Stat
-            label="Source"
-            value="Reference"
-            hint="mock data — API-ready"
+            label="Catalogue"
+            value="Demo data"
+            hint="salary and outlook are illustrative"
           />
         </div>
       </Section>
@@ -143,7 +160,7 @@ export default function CareerExplorerPage() {
               title="Unable to load careers"
               description={error}
               action={
-                <Button variant="outline" onClick={() => window.location.reload()}>
+                <Button variant="outline" onClick={() => setReloadKey((key) => key + 1)}>
                   Try again
                 </Button>
               }
@@ -156,25 +173,34 @@ export default function CareerExplorerPage() {
         <Card>
           <CardBody className="p-6">
             <EmptyState
-              icon={Compass}
-              title="No careers match your filters"
-              description="Try clearing the search or selecting a different category."
+              icon={showSavedOnly ? Tags : Compass}
+              title={showSavedOnly ? 'No saved careers found' : 'No careers match your filters'}
+              description={
+                showSavedOnly
+                  ? 'Save a career from its detail page, or show the full catalogue.'
+                  : 'Try clearing the search or selecting a different category.'
+              }
               action={
                 <Button
                   variant="outline"
                   onClick={() => {
                     setQuery('');
                     setCategory(ALL);
+                    setShowSavedOnly(false);
                   }}
                 >
-                  Clear filters
+                  {showSavedOnly ? 'Show all careers' : 'Clear filters'}
                 </Button>
               }
             />
           </CardBody>
         </Card>
       ) : (
-        <CareerGrid careers={filtered} />
+        <CareerGrid
+          careers={filtered}
+          interests={interests}
+          savedCareerIds={savedCareerIds}
+        />
       )}
     </div>
   );
@@ -183,9 +209,9 @@ export default function CareerExplorerPage() {
 function GridSkeleton() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {Array.from({ length: 6 }).map((_, i) => (
+      {Array.from({ length: 6 }).map((_, index) => (
         <div
-          key={i}
+          key={index}
           className="h-64 rounded-2xl border border-slate-200 bg-white animate-pulse"
         />
       ))}
@@ -193,6 +219,6 @@ function GridSkeleton() {
   );
 }
 
-function titleCase(s) {
-  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+function titleCase(value) {
+  return value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
 }

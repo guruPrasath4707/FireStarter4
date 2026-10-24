@@ -1,41 +1,32 @@
-# features/careers
+# Career Explorer
 
-Career Explorer module — listing + detail.
+The Career Explorer is a small reference catalogue and navigation aid. It is not an AI recommender or a live labour-market feed.
+
+## What works
+
+- Search by role, description, or skill.
+- Filter by the six catalogue categories.
+- See a transparent count of the profile interests that overlap a career's tags.
+- See catalogue entries sorted by overlap count when interests are available; with no interests, catalogue order is preserved.
+- Save and remove careers from the signed-in user's path; saved choices are stored with the user's Firestore profile and can be filtered in the catalogue.
+- Open detail pages with skills, example learning stages, related careers, and illustrative salary fields.
+
+## Data and limitations
+
+- The catalogue contains 12 local records and six categories in `data/careers.mock.ts`.
+- Interest overlap is a deterministic tag intersection; it is not an AI score, aptitude result, or probability of career success.
+- Salary ranges, market outlook labels, skill weights, roadmaps, and descriptions are illustrative placeholders. They are not currently linked to dated authoritative labour-market sources and must not be presented as current verified guidance.
+- Catalogue entries do not currently provide source citations. Add a source, geography, publication date and methodology before promoting salary/growth information as factual.
+- Saved-career IDs are stored in `users/{uid}.savedCareerIds` using Firestore array transforms to avoid duplicate entries when saving from multiple tabs.
 
 ## Structure
 
-```
+```text
 careers/
-├── data/careers.mock.ts            # 12 careers, 6 categories
-├── services/careersService.ts      # list({query,category,interests}), getById(id)
-├── pages/
-│   ├── CareerExplorerPage.jsx      # listing + filters + stats
-│   └── CareerDetailPage.jsx        # details + roadmap + related
-├── components/
-│   ├── CareerFilters.jsx
-│   ├── CareerCard.jsx
-│   ├── CareerGrid.jsx
-│   ├── CareerDetailHeader.jsx
-│   ├── RoadmapPreview.jsx
-│   └── SkillBar.jsx
-├── types.ts
-└── index.js                        # barrel
+  data/careers.mock.ts
+  services/careerFit.js
+  services/careersService.ts
+  pages/CareerExplorerPage.jsx
+  pages/CareerDetailPage.jsx
+  components/
 ```
-
-## Personalization
-
-The page reads `profile.interests` from `ProfileContext` and passes it to
-`careersService.list()`. The service uses the interests as a soft filter today
-(the mock has them in `career.interests`) and the **mock** `matchScore` drives
-the on-card progress bar. AI/recommendation scoring is a later phase.
-
-## Backend swap
-
-`careersService.ts` is gated by a `USE_MOCK` flag. When the backend is live,
-flip the flag and the service routes through `apiClient.get('/careers')`. The
-response shape (`{ items, total, categories }`) is stable.
-
-## Routes
-
-- `/careers`       — listing
-- `/careers/:id`   — detail (accepts `c-001` id or slug)
