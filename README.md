@@ -1,163 +1,109 @@
-# FireStarter4
+# Pathlight
 
-A modern full-stack web application built using React, Vite, and Node.js, designed with a focus on performance, scalability, and maintainability.
+Pathlight is a React single-page application for student career exploration and learning planning. It uses Vite for development and production builds, Firebase Authentication for sign-in, and Cloud Firestore for user profiles.
 
----
+> **Implementation status:** this repository is an evolving prototype, not a finished full-stack product. The Career Explorer uses local mock data. Learning Hub, AI Mentor, Assessments, Scholarships, and Opportunities currently render placeholder screens. No backend service is included in this repository.
 
-## Overview
+## What is implemented
 
-FireStarter4 demonstrates a clean and modular architecture for developing modern web applications. The project follows best practices in frontend development, component organization, and responsive design to deliver a smooth user experience.
+- **Public experience:** landing page, registration, and login routes.
+- **Authentication:** email/password sign-up and sign-in through Firebase Authentication.
+- **Profile and onboarding:** profile state is shared through React context; profile documents are stored in the Firestore `users` collection.
+- **Career Explorer:** searchable/filterable career cards and detail pages driven by local mock data. Its match scores and recommendations are demo content, not a validated recommendation model.
+- **Application shell:** protected routes, dashboard, profile/settings screens, reusable UI/design-system components, and English/French i18n configuration.
+- **API client foundation:** a small fetch client exists for a future backend. It does not mean the backend is included or deployed.
 
----
+## Stack
 
-## Features
+- React 18, React Router, Vite 5
+- Tailwind CSS 4
+- Firebase Authentication and Cloud Firestore
+- i18next / react-i18next
+- React Leaflet (dependency available for map-related features)
 
-- Responsive user interface
-- Modular and reusable components
-- Fast development workflow with Vite
-- Clean project structure
-- Optimized performance
-- Easy customization and scalability
+## Requirements
 
----
+- Node.js 20 or a compatible supported Node.js version
+- npm (the lockfile is committed; use `npm ci` for reproducible installs)
+- A Firebase project with **Email/Password Authentication** enabled and Cloud Firestore configured to use the app
 
-## Tech Stack
+## Run locally
 
-| Category | Technologies |
-|-----------|-------------|
-| Frontend | React, Vite, JavaScript |
-| Styling | CSS |
-| Backend | Node.js *(if applicable)* |
-| Version Control | Git, GitHub |
+1. Clone and enter the repository:
 
----
+   ```bash
+   git clone https://github.com/guruPrasath4707/FireStarter4.git
+   cd FireStarter4
+   ```
 
-## Project Structure
+2. Install the locked dependencies:
 
-```text
-FireStarter4/
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── pages/
-│   ├── App.jsx
-│   └── main.jsx
-├── package.json
-├── vite.config.js
-└── README.md
-```
+   ```bash
+   npm ci
+   ```
 
----
+3. Create your local environment file:
 
-## Installation
+   **PowerShell**
+   ```powershell
+   Copy-Item .env.example .env.local
+   ```
 
-### Clone the repository
+   **macOS / Linux**
+   ```bash
+   cp .env.example .env.local
+   ```
 
-```bash
-git clone https://github.com/guruPrasath4707/FireStarter4.git
-```
+4. Fill the `VITE_FIREBASE_*` values with the web-app configuration from your Firebase project settings. Leave `VITE_API_URL` at its default unless you have a compatible backend running.
 
-### Navigate to the project directory
+5. Start the development server:
 
-```bash
-cd FireStarter4
-```
+   ```bash
+   npm run dev
+   ```
 
-### Install dependencies
+   Vite prints the local URL in the terminal (normally `http://localhost:5173`).
 
-```bash
-npm install
-```
+## Available scripts
 
-### Start the development server
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the Vite development server |
+| `npm run build` | Create a production build in `dist/` |
+| `npm run preview` | Preview the built app locally |
 
-```bash
-npm run dev
-```
+There is not yet a dedicated unit or end-to-end test suite. The initial CI workflow runs `npm ci` and `npm run build`; a successful build is not proof that Firebase rules, authentication flows, or all UI interactions work end to end.
 
-Open the application in your browser:
+## Environment variables
 
-```text
-http://localhost:5173
-```
+See [`.env.example`](.env.example). Vite exposes variables prefixed with `VITE_` to client-side code, so **never put private keys, service-account credentials, or other server secrets in these variables**. Firebase web configuration is intended for client apps, but secure the project with appropriate API-key restrictions, Firebase Authentication settings, and Firestore Security Rules. Do not rely on the front end alone to protect user data.
 
----
+The API client currently defaults to `http://localhost:5000` when `VITE_API_URL` is unset. No server for that URL is included here.
 
-## Screenshots
-
-Add screenshots of the application in this section.
-
-Example:
+## Project map
 
 ```text
-screenshots/
-├── home.png
-├── dashboard.png
-└── mobile-view.png
+src/
+  components/       Shared layout and UI components
+  context/          Authentication and profile state
+  design-system/    Reusable visual components and tokens
+  features/careers/ Career Explorer, details, service, and mock dataset
+  layouts/          Public, authenticated, and auth layouts
+  pages/            Public, auth, app, and placeholder pages
+  routes/           Route definitions and navigation metadata
+  services/         Firestore helpers and generic API client
+  firebase.js       Firebase client setup from environment variables
+  i18n.js            i18next initialization
 ```
 
----
+## Current priorities
 
-## Live Demo
-
-Add the deployed application link here after hosting on Vercel or Netlify.
-
-Example:
-
-```text
-https://firestarter4.vercel.app
-```
-
----
-
-## Future Enhancements
-
-- User authentication
-- Database integration
-- API integration
-- Dark mode support
-- Performance optimization
-- Unit testing
-- CI/CD deployment pipeline
-
----
+1. Establish repeatable CI and local configuration (this baseline).
+2. Add tests around authentication/profile behavior and career filtering.
+3. Replace placeholder screens incrementally with working, accessible features.
+4. Replace mock career data only after a real data source and recommendation criteria are defined.
+5. Add an actual backend only when its API contract, authorization, deployment, and error handling are ready.
 
 ## Contributing
 
-Contributions are welcome.
-
-1. Fork the repository.
-2. Create a feature branch.
-
-```bash
-git checkout -b feature/feature-name
-```
-
-3. Commit your changes.
-
-```bash
-git commit -m "Add feature"
-```
-
-4. Push the branch.
-
-```bash
-git push origin feature/feature-name
-```
-
-5. Open a Pull Request.
-
----
-
-## Author
-
-Guru Prasath
-
-GitHub: https://github.com/guruPrasath4707
-
----
-
-## License
-
-This project is licensed under the MIT License.
+Work on a feature branch, keep secrets and local environment files out of commits, run `npm ci` and `npm run build`, and open a pull request with a summary of behavior changes and test results.
