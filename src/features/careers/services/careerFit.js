@@ -1,7 +1,7 @@
 import {
   formatInterestLabel,
   getInterestOverlap,
-} from '../../../utils/interestMatching';
+} from '../../../utils/interestMatching.js';
 
 export function getCareerInterestFit(careerInterests = [], selectedInterests = []) {
   return getInterestOverlap(careerInterests, selectedInterests);

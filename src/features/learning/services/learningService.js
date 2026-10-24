@@ -1,8 +1,8 @@
 import {
   LEARNING_CATEGORIES,
   LEARNING_RESOURCES,
-} from '../data/resources';
-import { getInterestOverlap } from '../../../utils/interestMatching';
+} from '../data/resources.js';
+import { getInterestOverlap } from '../../../utils/interestMatching.js';
 
 export function listLearningResources({
   query = '',
