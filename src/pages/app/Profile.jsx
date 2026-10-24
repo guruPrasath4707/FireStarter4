@@ -8,6 +8,7 @@ import { Field, Input, Textarea } from '../../design-system/Input';
 import { Select } from '../../design-system/Select';
 import { Avatar } from '../../design-system/Avatar';
 import { PageHeader } from '../../components/layout/PageHeader';
+import { normalizePreferredLanguage, SUPPORTED_LANGUAGES } from '../../utils/languages';
 
 const LEVELS = [
   { value: 'class-9',  label: 'Class 9' },
@@ -17,14 +18,6 @@ const LEVELS = [
   { value: 'ug',       label: 'Undergraduate' },
   { value: 'pg',       label: 'Postgraduate' },
   { value: 'working',  label: 'Working professional' },
-];
-
-const LANGUAGES = [
-  { value: 'en', label: 'English' },
-  { value: 'hi', label: 'हिन्दी (Hindi)' },
-  { value: 'ta', label: 'தமிழ் (Tamil)' },
-  { value: 'es', label: 'Español' },
-  { value: 'fr', label: 'Français' },
 ];
 
 const STUDY = [
@@ -42,7 +35,7 @@ export default function Profile() {
     academicLevel: profile?.academicLevel || 'class-12',
     interests: profile?.interests || [],
     careerGoal: profile?.careerGoal || '',
-    preferredLanguage: profile?.preferredLanguage || 'en',
+    preferredLanguage: normalizePreferredLanguage(profile?.preferredLanguage),
     dailyStudyGoal: String(profile?.dailyStudyGoal || 30),
   });
   const [saved, setSaved] = useState(false);
@@ -117,8 +110,11 @@ export default function Profile() {
             <Field label="Academic level">
               <Select options={LEVELS} value={form.academicLevel} onChange={(v) => update('academicLevel', v)} />
             </Field>
-            <Field label="Preferred language">
-              <Select options={LANGUAGES} value={form.preferredLanguage} onChange={(v) => update('preferredLanguage', v)} />
+            <Field
+              label="Preferred language"
+              hint="The app interface is currently available in English only. More languages will appear after their translations are complete."
+            >
+              <Select options={SUPPORTED_LANGUAGES} value={form.preferredLanguage} onChange={(v) => update('preferredLanguage', v)} />
             </Field>
             <Field label="Daily study goal">
               <Select options={STUDY} value={form.dailyStudyGoal} onChange={(v) => update('dailyStudyGoal', v)} />

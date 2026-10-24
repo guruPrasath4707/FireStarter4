@@ -10,7 +10,7 @@ Pathlight is a React single-page application for student career exploration and 
 - **Authentication:** email/password sign-up and sign-in through Firebase Authentication.
 - **Profile and onboarding:** profile state is shared through React context; profile documents are stored in the Firestore `users` collection.
 - **Career Explorer:** searchable/filterable career cards and detail pages driven by local catalogue data. Interest overlap is derived from explicit profile tags; it is not an AI recommendation model. Salary ranges and market outlook labels in the catalogue remain illustrative placeholders.
-- **Application shell:** protected routes, dashboard, profile/settings screens, reusable UI/design-system components, and English/French i18n configuration.
+- **Application shell:** protected routes, dashboard, profile/settings screens, and reusable UI/design-system components. The UI is currently English-only; the i18next setup is a localization scaffold, not full multilingual coverage.
 - **API client foundation:** a small fetch client exists for a future backend. It does not mean the backend is included or deployed.
 
 ## Stack
@@ -71,8 +71,9 @@ Pathlight is a React single-page application for student career exploration and 
 | `npm run dev` | Start the Vite development server |
 | `npm run build` | Create a production build in `dist/` |
 | `npm run preview` | Preview the built app locally |
+| `npm test` | Run the Node.js built-in tests for Firebase configuration, route decisions, and career-interest matching |
 
-There is not yet a dedicated unit or end-to-end test suite. The initial CI workflow runs `npm ci` and `npm run build`; a successful build is not proof that Firebase rules, authentication flows, or all UI interactions work end to end.
+GitHub Actions runs `npm ci`, `npm test`, and `npm run build`. The current automated tests cover pure helper logic; they are not browser-level tests and do not prove that Firebase rules, authentication flows, or all UI interactions work end to end.
 
 ## Environment variables
 
@@ -96,13 +97,9 @@ src/
   i18n.js            i18next initialization
 ```
 
-## Current priorities
+## Implementation roadmap
 
-1. Establish repeatable CI and local configuration (this baseline).
-2. Add tests around authentication/profile behavior and career filtering.
-3. Replace placeholder screens incrementally with working, accessible features.
-4. Replace mock career data only after a real data source and recommendation criteria are defined.
-5. Add an actual backend only when its API contract, authorization, deployment, and error handling are ready.
+See [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md) for the current prioritized audit checklist, completed milestones, known limitations, and next implementation tasks.
 
 ## Contributing
 

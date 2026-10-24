@@ -10,10 +10,14 @@ export function AppFooter() {
           <Sparkles size={12} className="text-slate-400" />
           <span>{brand.tagline}</span>
         </div>
-        <div className="flex items-center gap-5">
-          <a href="#" className="hover:text-slate-900">Privacy</a>
-          <a href="#" className="hover:text-slate-900">Terms</a>
-          <a href="#" className="hover:text-slate-900">Help</a>
+        <div className="flex flex-wrap items-center justify-center gap-5">
+          <a href={brand.links.source} target="_blank" rel="noreferrer" className="hover:text-slate-900">
+            Source code
+          </a>
+          <a href={brand.links.issues} target="_blank" rel="noreferrer" className="hover:text-slate-900">
+            Report an issue
+          </a>
+          <span>Privacy and terms pages are not published yet.</span>
         </div>
       </div>
     </footer>

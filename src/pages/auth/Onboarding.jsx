@@ -20,6 +20,7 @@ import { Select } from '../../design-system/Select';
 import { Progress } from '../../design-system/Progress';
 import { useAuth } from '../../context/AuthContext';
 import { useProfile } from '../../context/ProfileContext';
+import { SUPPORTED_LANGUAGES } from '../../utils/languages';
 
 const STEPS = ['Basics', 'Interests', 'Goals', 'Preferences'];
 
@@ -42,14 +43,6 @@ const INTERESTS = [
   { id: 'health',     label: 'Health & Med',   icon: HeartPulse },
   { id: 'languages',  label: 'Languages',      icon: Languages },
   { id: 'making',     label: 'Building / DIY', icon: Wrench },
-];
-
-const LANGUAGES = [
-  { value: 'en', label: 'English' },
-  { value: 'hi', label: 'हिन्दी (Hindi)' },
-  { value: 'ta', label: 'தமிழ் (Tamil)' },
-  { value: 'es', label: 'Español' },
-  { value: 'fr', label: 'Français' },
 ];
 
 const STUDY_GOALS = [
@@ -240,10 +233,14 @@ export default function Onboarding() {
                   <h2 className="text-xl font-semibold text-slate-900">A few last preferences</h2>
                   <p className="mt-1 text-sm text-slate-500">We can change these later.</p>
                 </div>
-                <Field label="Preferred language" htmlFor="ob-lang">
+                <Field
+                  label="Preferred language"
+                  htmlFor="ob-lang"
+                  hint="The app interface is currently available in English only. More languages will appear after their translations are complete."
+                >
                   <Select
                     id="ob-lang"
-                    options={LANGUAGES}
+                    options={SUPPORTED_LANGUAGES}
                     value={data.preferredLanguage}
                     onChange={(v) => update('preferredLanguage', v)}
                   />
