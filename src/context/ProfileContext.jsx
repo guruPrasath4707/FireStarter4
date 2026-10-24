@@ -1,10 +1,12 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { useAuth } from './AuthContext';
-import {
-  getUserProfile,
-  setUserProfile,
-  subscribeUserProfile,
-} from '../services/firestore';
+import { setUserProfile, subscribeUserProfile } from '../services/firestore';
 
 const ProfileContext = createContext(null);
 
@@ -28,63 +30,51 @@ export function ProfileProvider({ children }) {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const unsubRef = useRef(null);
+  const [reloadToken, setReloadToken] = useState(0);
+
+  const retryProfile = useCallback(() => {
+    setReloadToken((current) => current + 1);
+  }, []);
 
   useEffect(() => {
     if (authLoading) return;
+
     if (!user) {
       setProfile(null);
       setLoading(false);
       setError(null);
-      return;
+      return undefined;
     }
+
+    let active = true;
+    setProfile(null);
     setLoading(true);
     setError(null);
 
-    // Seed on first sign-in
-    (async () => {
-      try {
-        const existing = await getUserProfile(user.uid);
-        if (!existing) {
-          await setUserProfile(user.uid, {
-            name: user.displayName || '',
-            email: user.email || '',
-            academicLevel: '',
-            interests: [],
-            careerGoal: '',
-            preferredLanguage: 'en',
-            dailyStudyGoal: 30,
-            onboardingCompleted: false,
-          });
-        }
-      } catch (e) {
-        // Non-fatal: subscription will surface real errors.
-        // eslint-disable-next-line no-console
-        console.warn('[profile] seed failed', e);
-      }
-    })();
-
-    unsubRef.current?.();
-    unsubRef.current = subscribeUserProfile(
+    const unsubscribe = subscribeUserProfile(
       user.uid,
       (data) => {
+        if (!active) return;
         setProfile(normalize(data));
+        setError(null);
         setLoading(false);
       },
-      (err) => {
-        setError(err);
+      (subscriptionError) => {
+        if (!active) return;
+        setError(subscriptionError);
         setLoading(false);
       },
     );
 
     return () => {
-      unsubRef.current?.();
-      unsubRef.current = null;
+      active = false;
+      unsubscribe();
     };
-  }, [user, authLoading]);
+  }, [user, authLoading, reloadToken]);
 
   async function completeOnboarding(data) {
     if (!user) throw new Error('Not authenticated');
+
     const payload = {
       name: (data.name || user.displayName || '').trim(),
       email: user.email || data.email || '',
@@ -95,6 +85,7 @@ export function ProfileProvider({ children }) {
       dailyStudyGoal: Number(data.dailyStudyGoal) || 30,
       onboardingCompleted: true,
     };
+
     await setUserProfile(user.uid, payload);
     return payload;
   }
@@ -104,13 +95,17 @@ export function ProfileProvider({ children }) {
     await setUserProfile(user.uid, patch);
   }
 
+  const needsOnboarding =
+    !!user && !loading && !error && (!profile || !profile.onboardingCompleted);
+
   const value = {
     profile,
     loading,
     error,
-    needsOnboarding: !!user && (!profile || !profile.onboardingCompleted),
+    needsOnboarding,
     completeOnboarding,
     updateProfile,
+    retryProfile,
   };
 
   return <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>;
