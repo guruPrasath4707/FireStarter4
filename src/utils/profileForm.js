@@ -32,15 +32,17 @@ export function normalizeProfileForm(form) {
   const careerGoal = typeof form?.careerGoal === 'string'
     ? form.careerGoal.trim()
     : '';
-  const interests = [
-    ...new Map(
-      (Array.isArray(form?.interests) ? form.interests : [])
-        .filter((value) => typeof value === 'string')
-        .map((value) => value.trim())
-        .filter(Boolean)
-        .map((value) => [value.toLocaleLowerCase(), value]),
-    ).values(),
-  ];
+  const seenInterests = new Set();
+  const interests = (Array.isArray(form?.interests) ? form.interests : [])
+    .filter((value) => typeof value === 'string')
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .filter((value) => {
+      const key = value.toLocaleLowerCase();
+      if (seenInterests.has(key)) return false;
+      seenInterests.add(key);
+      return true;
+    });
   const dailyStudyGoal = Number(form?.dailyStudyGoal);
 
   const errors = {};
