@@ -46,7 +46,7 @@ This is the working checklist for improving the existing application without pre
 - [x] Ensure all public navigation anchors land on a real section or route.
 - [x] Replace placeholder privacy/terms/help links with real pages or clearly non-interactive copy until those pages exist.
 - [x] Bring branding and public-facing UI copy into alignment with implemented capabilities.
-- [ ] Align the language selector with the translations that are actually implemented.
+- [x] Align onboarding and profile language choices with translations that are actually loaded by the runtime (English only for now); normalize legacy unsupported preferences to English and test fallback behavior.
 
 ### 5. Working student features (incremental, not fake integrations)
 - [ ] Learning Hub: curated starter catalogue with clear source/license metadata and working completion state.
@@ -71,6 +71,6 @@ This is the working checklist for improving the existing application without pre
 
 ## Current milestone
 
-Milestone 3 was completed and merged in PR #5. Interest overlap is calculated from profile tags, saved careers persist in Firestore, and unsupported match-score claims were removed.
+Milestones 0–4 are complete on `main` or in the language-alignment pull request pending review. Milestone 4 changes remove unsupported public claims, make public navigation targets real, replace fake/dead footer links with accurate project links and a clear legal-page notice, and restrict language preferences to the English interface that is actually loaded. Existing profile documents with unsupported language codes safely fall back to English in the profile editor.
 
-Milestone 4 is being implemented on the honest-public-experience branch. The landing page now states which capabilities work, removes fabricated testimonials and user-count claims, gives the FAQ a real target, and replaces dead footer links with a real issue tracker and an explicit notice that legal pages are not published. CI must pass before the milestone is considered verified.
+The language-alignment branch passed the GitHub Actions workflow (`npm ci`, `npm test`, and `npm run build`) at commit `7e0f052`. The next implementation milestone is 5: build one student-facing feature at a time using real, reviewable local data and clear sourcing—starting with a curated Learning Hub catalog and persisted completion state. After that, implement a deterministic baseline assessment, define the AI Mentor server contract, then add verified scholarship/opportunity sources. Do not mark those features complete until behavior and relevant tests are implemented.
