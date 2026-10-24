@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   BookOpen,
+  ClipboardCheck,
   Compass,
   UserRound,
 } from 'lucide-react';
@@ -104,6 +105,18 @@ export default function Dashboard() {
                 Your tracked profile fields are complete. Continue exploring roles and saving the ones you want to research.
               </div>
             )}
+            <Link
+              to="/assessments"
+              className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5 hover:bg-slate-50 transition-colors"
+            >
+              <div className="h-9 w-9 rounded-lg bg-slate-100 text-slate-700 grid place-items-center">
+                <ClipboardCheck size={16} />
+              </div>
+              <div className="flex-1 text-sm text-slate-700">
+                {profile?.latestAssessmentResult ? 'Review career-interest check-in' : 'Take a career-interest check-in'}
+              </div>
+              <ArrowRight size={16} className="text-slate-400" />
+            </Link>
             <Link
               to="/careers?saved=1"
               className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5 hover:bg-slate-50 transition-colors"

@@ -12,6 +12,16 @@ import {
 } from 'firebase/firestore';
 import { db, firebaseSetupMessage } from '../firebase';
 
+export type CareerInterestAssessmentResult = {
+  assessmentId: string;
+  title: string;
+  completedAt: string;
+  answerCount: number;
+  answers: Record<string, string>;
+  scores: Array<{ id: string; label: string; score: number }>;
+  topInterests: Array<{ id: string; label: string; score: number }>;
+};
+
 export type UserProfileDoc = {
   name: string;
   email: string;
@@ -23,6 +33,7 @@ export type UserProfileDoc = {
   onboardingCompleted: boolean;
   savedCareerIds?: string[];
   completedLearningResourceIds?: string[];
+  latestAssessmentResult?: CareerInterestAssessmentResult | null;
   updatedAt?: unknown;
 };
 
@@ -107,6 +118,27 @@ export async function reopenLearningResource(uid: string, resourceId: string): P
     profileRef(uid),
     {
       completedLearningResourceIds: arrayRemove(resourceId),
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true },
+  );
+}
+
+/** Save the latest completed self-reflection check-in on the signed-in user's profile. */
+export async function saveCareerInterestAssessmentResult(
+  uid: string,
+  result: CareerInterestAssessmentResult,
+): Promise<void> {
+  if (!result || result.assessmentId !== 'career-interest-checkin-v1') {
+    throw new Error('The assessment result is not a recognized career-interest check-in.');
+  }
+  if (result.answerCount !== 8 || Object.keys(result.answers || {}).length !== 8) {
+    throw new Error('The assessment result is incomplete. Answer all questions before saving.');
+  }
+  await setDoc(
+    profileRef(uid),
+    {
+      latestAssessmentResult: result,
       updatedAt: serverTimestamp(),
     },
     { merge: true },
