@@ -21,6 +21,10 @@ test('every learning resource has unique identity, direct provider links, and ri
     assert.match(resource.url, /^https:\/\//);
     assert.match(resource.sourceUrl, /^https:\/\//);
     assert.match(resource.rightsNote, /publisher|license/i);
+    assert.ok(resource.licenseLabel.trim());
+    assert.match(resource.licenseUrl, /^https:\/\//);
+    assert.ok(resource.licenseNote.trim());
+    assert.equal(resource.rightsReviewedOn, LEARNING_RESOURCE_REVIEWED_AT);
     assert.equal(resource.sourceReviewDate, LEARNING_RESOURCE_REVIEWED_AT);
     assert.ok(LEARNING_CATEGORIES.some((category) => category.value === resource.category));
   }
@@ -60,4 +64,13 @@ test('interest matching normalizes the onboarding Math & Logic label and keeps u
 test('with no selected interests, matching-only mode does not pretend to personalize the catalogue', () => {
   const result = listLearningResources({ matchingOnly: true, interests: [] });
   assert.equal(result.total, LEARNING_RESOURCES.length);
+});
+
+test('distinguishes documentation license guidance from service terms', () => {
+  const byId = Object.fromEntries(LEARNING_RESOURCES.map((resource) => [resource.id, resource]));
+  assert.match(byId['mdn-first-website'].licenseLabel, /CC BY-SA 2\.5 or later/i);
+  assert.match(byId['python-official-tutorial'].licenseLabel, /PSF License Version 2/i);
+  assert.match(byId['microsoft-python-fundamentals'].licenseLabel, /no blanket reuse license assumed/i);
+  assert.match(byId['khan-computing'].licenseLabel, /no blanket reuse license assumed/i);
+  assert.match(byId['github-skills'].licenseLabel, /no blanket reuse license assumed/i);
 });

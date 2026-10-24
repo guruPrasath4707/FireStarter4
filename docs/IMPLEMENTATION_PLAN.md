@@ -49,7 +49,7 @@ This is the working checklist for improving the existing application without pre
 - [x] Remove language choices that imply translations are complete when only English is implemented; communicate English-only availability honestly.
 
 ### 5. Working student features (incremental, not fake integrations)
-- [x] Learning Hub: curated starter catalogue with publisher/source/rights metadata, topic/interest filters, and Firestore-persisted self-reported completion.
+- [x] Learning Hub: curated starter catalogue with publisher/source metadata, provider-specific license/terms links, topic/interest filters, and Firestore-persisted self-reported completion.
 - [x] Assessments: implement an eight-question deterministic career-interest check-in, show the full tag-score breakdown, and save latest results without aptitude/adaptive claims.
 - [ ] AI Mentor: define a server-side API contract and safe deployment approach before connecting a model; no provider secrets in Vite client variables.
 - [ ] Scholarships and Opportunities: define verified source, freshness date, eligibility fields, application URL, and update owner before presenting listings as real.
@@ -79,4 +79,6 @@ Profile/dashboard reliability was completed and merged in PR #7. Profile forms r
 
 Learning Hub was completed and merged in PR #9. It provides a source-reviewed catalogue of external resources, interest filtering, and atomic self-reported completion state in Firestore; it does not host courses, verify external activity, or award certificates. External links and provider terms need periodic review.
 
-The career-interest check-in is in progress on `work/assessment-interest-checkin-2026-10-25`. Its eight prompts are a transparent self-reflection, with one point per selected activity tag and latest-result persistence; it makes no aptitude or career-success prediction. CI must pass before this milestone is considered validated.
+The career-interest check-in was completed and merged in PR #11. Its eight prompts are a transparent self-reflection, with one point per selected activity tag and latest-result persistence; it makes no aptitude or career-success prediction.
+
+The Learning Hub rights metadata follow-up is being validated on `work/learning-resource-rights-current-2026-10-25`. It adds provider-specific license/terms links while distinguishing documentation licensing guidance from general service terms. CI must pass before this follow-up is merged.
