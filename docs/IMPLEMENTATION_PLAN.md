@@ -42,10 +42,11 @@ This is the working checklist for improving the existing application without pre
 - [ ] Validate salary/outlook catalogue data against dated authoritative sources before presenting it as current labour-market information.
 
 ### 4. Honest public experience and navigation
-- [ ] Remove invented testimonials, unsubstantiated learner-count claims, and misleading claims about features that are not implemented.
-- [ ] Ensure all public navigation anchors land on a real section or route.
-- [ ] Replace placeholder privacy/terms/help links with real pages or clearly non-interactive copy until those pages exist.
-- [ ] Bring branding, language options, and UI copy into alignment with implemented capabilities.
+- [x] Remove invented testimonials, unsubstantiated learner-count claims, and misleading claims about features that are not implemented.
+- [x] Ensure all public navigation anchors land on a real section or route.
+- [x] Replace placeholder privacy/terms/help links with real pages or clearly non-interactive copy until those pages exist.
+- [x] Bring branding and public-facing UI copy into alignment with implemented capabilities.
+- [ ] Align the language selector with the translations that are actually implemented.
 
 ### 5. Working student features (incremental, not fake integrations)
 - [ ] Learning Hub: curated starter catalogue with clear source/license metadata and working completion state.
@@ -70,4 +71,6 @@ This is the working checklist for improving the existing application without pre
 
 ## Current milestone
 
-Milestone 3 is in progress on the career-explorer work branch. Static match scores are being removed in favor of explicit interest overlap, and saved career actions are being connected to Firestore and the Saved careers filter.
+Milestone 3 was completed and merged in PR #5. Interest overlap is calculated from profile tags, saved careers persist in Firestore, and unsupported match-score claims were removed.
+
+Milestone 4 is being implemented on the honest-public-experience branch. The landing page now states which capabilities work, removes fabricated testimonials and user-count claims, gives the FAQ a real target, and replaces dead footer links with a real issue tracker and an explicit notice that legal pages are not published. CI must pass before the milestone is considered verified.
