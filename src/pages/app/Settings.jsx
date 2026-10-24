@@ -1,65 +1,75 @@
 import React from 'react';
-import { Settings as SettingsIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Settings as SettingsIcon, UserRound, Bell, Palette, Languages } from 'lucide-react';
 import { Card, CardBody, CardHeader, CardTitle, CardDescription } from '../../design-system/Card';
-import { Field } from '../../design-system/Input';
-import { Select } from '../../design-system/Select';
+import { Button } from '../../design-system/Button';
 import { PageHeader } from '../../components/layout/PageHeader';
-import { useAuth } from '../../context/AuthContext';
+
+const UNAVAILABLE_PREFERENCES = [
+  {
+    icon: Palette,
+    title: 'Theme',
+    description: 'A persistent light/dark theme is not implemented yet.',
+  },
+  {
+    icon: Bell,
+    title: 'Notifications',
+    description: 'The app does not currently send in-app or push notifications.',
+  },
+  {
+    icon: Languages,
+    title: 'Additional interface languages',
+    description: 'Only English is currently implemented across the interface. Additional languages will be offered after complete translations are available.',
+  },
+];
 
 export default function Settings() {
-  const { user } = useAuth();
-
   return (
     <div className="space-y-6">
       <PageHeader
         eyebrow="Settings"
-        title="App preferences"
-        subtitle="These will evolve as features ship."
+        title="App settings"
+        subtitle="Only working settings are shown as editable controls."
       />
 
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-[linear-gradient(135deg,#eef2ff,#fdf4ff)] border border-slate-200 text-violet-700 grid place-items-center">
+            <div className="h-10 w-10 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 grid place-items-center">
               <SettingsIcon size={18} />
             </div>
-            <CardTitle>Preferences</CardTitle>
+            <div>
+              <CardTitle>Profile preferences</CardTitle>
+              <CardDescription>Your academic level, interests, career goal, and study goal are saved on your profile.</CardDescription>
+            </div>
           </div>
-          <CardDescription>UI-only controls for now.</CardDescription>
         </CardHeader>
-        <CardBody className="grid sm:grid-cols-2 gap-4">
-          <Field label="Theme">
-            <Select
-              options={[
-                { value: 'system', label: 'System' },
-                { value: 'light',  label: 'Light' },
-                { value: 'dark',   label: 'Dark' },
-              ]}
-              value="system"
-              onChange={() => {}}
-            />
-          </Field>
-          <Field label="Notifications">
-            <Select
-              options={[
-                { value: 'all', label: 'All' },
-                { value: 'mentor', label: 'Mentor only' },
-                { value: 'none', label: 'None' },
-              ]}
-              value="all"
-              onChange={() => {}}
-            />
-          </Field>
-          <Field label="Account email">
-            <Select
-              options={[{ value: user?.email || '', label: user?.email || '' }]}
-              value={user?.email || ''}
-              onChange={() => {}}
-              disabled
-            />
-          </Field>
+        <CardBody>
+          <Button as={Link} to="/profile" variant="brand" leftIcon={UserRound}>
+            Edit profile preferences
+          </Button>
         </CardBody>
       </Card>
+
+      <section aria-labelledby="settings-unavailable-title" className="space-y-3">
+        <div>
+          <h2 id="settings-unavailable-title" className="text-base font-semibold text-slate-900">Not available yet</h2>
+          <p className="mt-1 text-sm text-slate-600">These are status notes, not inactive controls.</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-4">
+          {UNAVAILABLE_PREFERENCES.map(({ icon: Icon, title, description }) => (
+            <Card key={title}>
+              <CardBody className="p-5">
+                <div className="h-9 w-9 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 grid place-items-center">
+                  <Icon size={17} />
+                </div>
+                <h3 className="mt-3 text-sm font-semibold text-slate-900">{title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">{description}</p>
+              </CardBody>
+            </Card>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

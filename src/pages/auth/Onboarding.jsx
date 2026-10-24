@@ -44,14 +44,6 @@ const INTERESTS = [
   { id: 'making',     label: 'Building / DIY', icon: Wrench },
 ];
 
-const LANGUAGES = [
-  { value: 'en', label: 'English' },
-  { value: 'hi', label: 'हिन्दी (Hindi)' },
-  { value: 'ta', label: 'தமிழ் (Tamil)' },
-  { value: 'es', label: 'Español' },
-  { value: 'fr', label: 'Français' },
-];
-
 const STUDY_GOALS = [
   { value: '15', label: '15 min / day — light' },
   { value: '30', label: '30 min / day — steady' },
@@ -240,14 +232,12 @@ export default function Onboarding() {
                   <h2 className="text-xl font-semibold text-slate-900">A few last preferences</h2>
                   <p className="mt-1 text-sm text-slate-500">We can change these later.</p>
                 </div>
-                <Field label="Preferred language" htmlFor="ob-lang">
-                  <Select
-                    id="ob-lang"
-                    options={LANGUAGES}
-                    value={data.preferredLanguage}
-                    onChange={(v) => update('preferredLanguage', v)}
-                  />
-                </Field>
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="text-sm font-medium text-slate-800">Interface language: English</div>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-600">
+                    Additional languages will be offered after translations cover the full interface.
+                  </p>
+                </div>
                 <Field label="Daily study goal" htmlFor="ob-study">
                   <Select
                     id="ob-study"

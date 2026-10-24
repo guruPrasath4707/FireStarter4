@@ -52,7 +52,7 @@ export function Field({ label, hint, error, required, children, htmlFor, classNa
       {label ? <Label htmlFor={htmlFor} required={required}>{label}</Label> : null}
       {children}
       {error ? (
-        <p className="text-xs text-rose-600">{error}</p>
+        <p id={htmlFor ? `${htmlFor}-error` : undefined} className="text-xs text-rose-600">{error}</p>
       ) : hint ? (
         <p className="text-xs text-slate-500">{hint}</p>
       ) : null}

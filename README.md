@@ -10,7 +10,7 @@ Pathlight is a React single-page application for student career exploration and 
 - **Authentication:** email/password sign-up and sign-in through Firebase Authentication.
 - **Profile and onboarding:** profile state is shared through React context; profile documents are stored in the Firestore `users` collection.
 - **Career Explorer:** searchable/filterable career cards and detail pages driven by local catalogue data. Interest overlap is derived from explicit profile tags; it is not an AI recommendation model. Salary ranges and market outlook labels in the catalogue remain illustrative placeholders.
-- **Application shell:** protected routes, dashboard, profile/settings screens, reusable UI/design-system components, and English/French i18n configuration.
+- **Application shell:** protected routes, dashboard, profile/settings screens, reusable UI/design-system components, and an English-only interface until complete translations are available.
 - **API client foundation:** a small fetch client exists for a future backend. It does not mean the backend is included or deployed.
 
 ## Stack
@@ -72,7 +72,7 @@ Pathlight is a React single-page application for student career exploration and 
 | `npm run build` | Create a production build in `dist/` |
 | `npm run preview` | Preview the built app locally |
 
-There is not yet a dedicated unit or end-to-end test suite. The initial CI workflow runs `npm ci` and `npm run build`; a successful build is not proof that Firebase rules, authentication flows, or all UI interactions work end to end.
+There is a Node.js built-in unit test suite for route decisions, Firebase environment validation, career-interest matching, and profile-form logic. CI runs `npm ci`, `npm test`, and `npm run build`; a successful build is not proof that Firebase rules, authentication flows, or all UI interactions work end to end.
 
 ## Environment variables
 

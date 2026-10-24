@@ -97,8 +97,8 @@ export default function Register() {
             <Button type="submit" variant="brand" className="w-full" loading={submitting}>
               {submitting ? 'Creating account…' : 'Create account'}
             </Button>
-            <p className="text-xs text-slate-500 text-center">
-              By continuing, you agree to our Terms and Privacy Policy.
+            <p className="text-xs leading-relaxed text-slate-500 text-center">
+              Privacy and Terms pages have not been published yet. This is a prototype; avoid entering sensitive personal information.
             </p>
           </form>
         </CardBody>
