@@ -11,6 +11,7 @@ import { Badge } from '../../../design-system/Badge';
 import { EmptyState } from '../../../components/layout/EmptyState';
 import { Button } from '../../../design-system/Button';
 import { Compass, Layers, Tags } from 'lucide-react';
+import MarketDataNotice from '../components/MarketDataNotice';
 
 const ALL = 'all';
 const EMPTY_INTERESTS = [];
@@ -103,6 +104,7 @@ export default function CareerExplorerPage() {
 
   return (
     <div className="space-y-6">
+      <MarketDataNotice />
       <PageHeader
         eyebrow="Career Explorer"
         title="Explore career paths"
