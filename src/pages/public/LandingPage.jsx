@@ -49,10 +49,10 @@ const FEATURES = [
   },
   {
     icon: ClipboardCheck,
-    title: 'Assessments',
-    status: 'In development',
-    tone: 'default',
-    desc: 'A reliable baseline assessment is planned; adaptive scoring is not available.',
+    title: 'Career interest check-in',
+    status: 'Available after setup',
+    tone: 'success',
+    desc: 'Take an eight-question self-reflection with transparent tag counts. It is not an aptitude test or prediction of career success.',
   },
   {
     icon: Bot,
@@ -107,7 +107,7 @@ const FAQS = [
   {
     question: 'Which tools work today?',
     answer:
-      'The profile flow, Career Explorer, saved-career list, and curated Learning Hub are implemented when Firebase is configured. Learning Hub links to external providers and stores self-reported completion; it does not host course content. Assessments, AI Mentor, Scholarships, and Opportunities are still under development or awaiting verified data sources.',
+      'The profile flow, Career Explorer, saved-career list, curated Learning Hub, and career-interest check-in are implemented when Firebase is configured. Learning Hub links to external providers and stores self-reported completion; it does not host course content. The check-in is a simple self-reflection, not a validated aptitude tool. AI Mentor, Scholarships, and Opportunities are still under development or awaiting verified data sources.',
   },
   {
     question: 'Why does account access need setup?',
@@ -268,7 +268,7 @@ export default function LandingPage() {
           <div className="max-w-2xl">
             <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">Start with a profile and a clear shortlist.</h2>
             <p className="mt-3 text-sm sm:text-base leading-relaxed text-slate-300">
-              Create an account to explore the catalogue and save careers. The remaining learning tools are being built in phases.
+              Create an account to explore careers, save external learning resources as complete, and take a transparent career-interest check-in. AI Mentor, verified scholarships, and opportunities are still being built in phases.
             </p>
           </div>
           <div className="flex flex-wrap gap-3 shrink-0">

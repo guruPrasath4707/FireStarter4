@@ -10,6 +10,7 @@ import {
   markLearningResourceComplete,
   removeCareerFromUserPath,
   reopenLearningResource,
+  saveCareerInterestAssessmentResult,
   saveCareerToUserPath,
   setUserProfile,
   subscribeUserProfile,
@@ -32,6 +33,10 @@ function normalize(doc) {
     completedLearningResourceIds: Array.isArray(doc.completedLearningResourceIds)
       ? doc.completedLearningResourceIds
       : [],
+    latestAssessmentResult:
+      doc.latestAssessmentResult && typeof doc.latestAssessmentResult === 'object'
+        ? doc.latestAssessmentResult
+        : null,
     updatedAt: doc.updatedAt,
   };
 }
@@ -98,9 +103,7 @@ export function ProfileProvider({ children }) {
     };
 
     await setUserProfile(user.uid, payload);
-    // Update context immediately so the route guard does not redirect back to
-    // onboarding while the Firestore snapshot update is still in flight.
-    setProfile(normalize(payload));
+    setProfile((current) => normalize({ ...(current || {}), ...payload }));
     setError(null);
     setLoading(false);
     return payload;
@@ -165,6 +168,16 @@ export function ProfileProvider({ children }) {
     setError(null);
   }
 
+  async function saveAssessmentResult(result) {
+    if (!user) throw new Error('Not authenticated');
+    await saveCareerInterestAssessmentResult(user.uid, result);
+    setProfile((current) => normalize({
+      ...(current || {}),
+      latestAssessmentResult: result,
+    }));
+    setError(null);
+  }
+
   const needsOnboarding =
     !!user && !loading && !error && (!profile || !profile.onboardingCompleted);
 
@@ -179,6 +192,7 @@ export function ProfileProvider({ children }) {
     removeSavedCareer,
     completeLearningResource,
     reopenCompletedLearningResource,
+    saveAssessmentResult,
     retryProfile,
   };
 
