@@ -174,10 +174,10 @@ export default function CareerExplorerPage() {
           <CardBody className="p-6">
             <EmptyState
               icon={showSavedOnly ? Tags : Compass}
-              title={showSavedOnly ? 'No saved careers found' : 'No careers match your filters'}
+              title={showSavedOnly ? 'No saved careers match these filters' : 'No careers match your filters'}
               description={
                 showSavedOnly
-                  ? 'Save a career from its detail page, or show the full catalogue.'
+                  ? 'Try clearing search and category filters, or save a career from its detail page.'
                   : 'Try clearing the search or selecting a different category.'
               }
               action={

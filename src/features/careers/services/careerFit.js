@@ -11,9 +11,20 @@ const INTEREST_LABELS = {
   languages: 'Languages',
 };
 
+const INTEREST_ALIASES = {
+  technology: 'tech',
+  'math & logic': 'math',
+  'arts & design': 'arts',
+  'health & med': 'health',
+  'building / diy': 'making',
+  'building and diy': 'making',
+  'building & making': 'making',
+};
+
 function normalizeInterest(value) {
   if (typeof value !== 'string') return '';
-  return value.trim().toLocaleLowerCase();
+  const key = value.trim().toLocaleLowerCase();
+  return INTEREST_ALIASES[key] || key;
 }
 
 export function getCareerInterestFit(careerInterests = [], selectedInterests = []) {

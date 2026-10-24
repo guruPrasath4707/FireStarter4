@@ -30,6 +30,21 @@ test('deduplicates selected interests and ignores blank/non-string values', () =
   assert.deepEqual(fit.matchingInterests, ['science']);
 });
 
+test('normalizes the labels used in onboarding to the catalogue tag IDs', () => {
+  const fit = getCareerInterestFit(
+    ['tech', 'math', 'arts', 'health', 'making'],
+    ['Technology', 'Math & Logic', 'Arts & Design', 'Health & Med', 'Building / DIY'],
+  );
+  assert.equal(fit.matchCount, 5);
+  assert.deepEqual(fit.matchingInterests, [
+    'Technology',
+    'Math & Logic',
+    'Arts & Design',
+    'Health & Med',
+    'Building / DIY',
+  ]);
+});
+
 test('returns zero overlap when none of the selected tags fit the career', () => {
   const fit = getCareerInterestFit(['business'], ['tech', 'math']);
   assert.equal(fit.hasSelectedInterests, true);
