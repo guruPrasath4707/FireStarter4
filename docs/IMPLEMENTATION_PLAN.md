@@ -19,14 +19,14 @@ This is the working checklist for improving the existing application without pre
 - [x] Add .env.example; ignore local .env* files.
 - [x] Add GitHub Actions install/build workflow.
 - [x] Confirm production build through GitHub Actions.
-- [ ] Add an automated test command to CI and keep the workflow green.
+- [x] Add an automated test command to CI and confirm tests plus build pass.
 
 ### 1. Authentication, onboarding, and profile state
-- [ ] Make route guards read onboarding state from ProfileContext, not an absent AuthContext property.
-- [ ] Wait until both auth state and profile subscription are loaded before redirect decisions.
-- [ ] Prevent a failed profile read from being interpreted as incomplete onboarding; allow retry.
-- [ ] Remove the profile-seeding race that can overwrite a just-completed onboarding record.
-- [ ] Test the route-decision matrix with Node's built-in test runner.
+- [x] Make route guards read onboarding state from ProfileContext, not an absent AuthContext property.
+- [x] Wait until both auth state and profile subscription are loaded before redirect decisions.
+- [x] Prevent a failed profile read from being interpreted as incomplete onboarding; allow retry.
+- [x] Remove the profile-seeding race that can overwrite a just-completed onboarding record.
+- [x] Test the route-decision matrix with Node's built-in test runner.
 
 ### 2. Firebase configuration and data access
 - [ ] Remove duplicate Firebase app initialization and placeholder hard-coded configuration.
@@ -69,4 +69,4 @@ This is the working checklist for improving the existing application without pre
 
 ## Current milestone
 
-Milestone 1 is in progress on the working branch. Its completion depends on passing the new route-decision tests and the subsequent CI run.
+Milestone 2 is in progress on the work branch. Firebase configuration is being consolidated and made safe for unconfigured local builds. The working branch has passing route regression tests and production build on the previous auth/profile commit; this Firebase configuration change still needs its own CI result.

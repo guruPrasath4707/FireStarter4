@@ -47,10 +47,10 @@ function sleep(ms: number): Promise<void> {
 }
 
 async function getIdToken(): Promise<string | null> {
-  const u = auth.currentUser;
-  if (!u) return null;
+  const currentUser = auth?.currentUser;
+  if (!currentUser) return null;
   try {
-    return await u.getIdToken(/* forceRefresh */ false);
+    return await currentUser.getIdToken(false);
   } catch {
     return null;
   }
