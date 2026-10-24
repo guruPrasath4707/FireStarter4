@@ -262,16 +262,31 @@ export default function LearningHub() {
                         Source and usage notes
                       </summary>
                       <div className="mt-2 space-y-2 leading-relaxed">
-                        <p>Source reviewed: {resource.sourceReviewDate}</p>
+                        <p>Resource link reviewed: {resource.sourceReviewDate}</p>
                         <p>{resource.rightsNote}</p>
-                        <a
-                          href={resource.sourceUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-indigo-700 underline underline-offset-2"
-                        >
-                          Publisher source page <ArrowUpRight size={12} />
-                        </a>
+                        <div className="space-y-1">
+                          <p className="font-medium text-slate-700">License / terms: {resource.licenseLabel}</p>
+                          <p>{resource.licenseNote}</p>
+                          <p>Rights information reviewed: {resource.rightsReviewedOn}</p>
+                        </div>
+                        <div className="flex flex-wrap gap-x-4 gap-y-2">
+                          <a
+                            href={resource.sourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-indigo-700 underline underline-offset-2"
+                          >
+                            Publisher source page <ArrowUpRight size={12} />
+                          </a>
+                          <a
+                            href={resource.licenseUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-indigo-700 underline underline-offset-2"
+                          >
+                            License / terms page <ArrowUpRight size={12} />
+                          </a>
+                        </div>
                       </div>
                     </details>
                   </div>
@@ -283,7 +298,7 @@ export default function LearningHub() {
       )}
 
       <p className="text-xs leading-relaxed text-slate-500">
-        External resource summaries are short navigational descriptions, not copied lessons. Provider availability, sign-in requirements, and content terms can change.
+        External resource summaries are short navigational descriptions, not copied lessons. These notes link to provider licensing or terms information; they are not legal advice or permission to republish linked content. Provider availability, sign-in requirements, and terms can change.
       </p>
     </div>
   );

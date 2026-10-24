@@ -25,3 +25,10 @@ Each record keeps the publisher name, target URL, source URL, source review date
 - GitHub Skills: interactive practice catalogue for GitHub and software collaboration.
 
 The local catalogue is deliberately small. It avoids invented lesson content, made-up durations, unverified certificates, and claims that an external course is free or always available.
+
+
+## Provider-specific licensing and terms (reviewed 25 October 2026)
+
+Each record links to its learning page and a relevant provider rights page. MDN documentation guidance describes CC BY-SA 2.5 or later unless a page states otherwise; MDN code samples can have different terms. Python publishes documentation license information. Microsoft Learn and Khan Academy have service terms, and GitHub Skills can link to repositories with individual licenses. The catalogue links to these resources only and does not republish their lessons.
+
+These notes are navigational summaries, not legal advice or blanket permission to reuse external materials. Verify the current terms and any page- or repository-specific license before copying or redistributing content. Review the links periodically because providers may change their terms.
