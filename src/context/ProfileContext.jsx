@@ -7,6 +7,8 @@ import React, {
 } from 'react';
 import { useAuth } from './AuthContext';
 import {
+  markLearningResourceComplete,
+  markLearningResourceIncomplete,
   removeCareerFromUserPath,
   saveCareerToUserPath,
   setUserProfile,
@@ -27,6 +29,7 @@ function normalize(doc) {
     dailyStudyGoal: Number(doc.dailyStudyGoal) || 30,
     onboardingCompleted: !!doc.onboardingCompleted,
     savedCareerIds: Array.isArray(doc.savedCareerIds) ? doc.savedCareerIds : [],
+    completedLearningIds: Array.isArray(doc.completedLearningIds) ? doc.completedLearningIds : [],
     updatedAt: doc.updatedAt,
   };
 }
@@ -134,6 +137,34 @@ export function ProfileProvider({ children }) {
     setError(null);
   }
 
+  async function completeLearningResource(resourceId) {
+    if (!user) throw new Error('Not authenticated');
+    if (typeof resourceId !== 'string' || !resourceId.trim()) {
+      throw new Error('A learning resource id is required.');
+    }
+    const id = resourceId.trim();
+    await markLearningResourceComplete(user.uid, id);
+    setProfile((current) => normalize({
+      ...(current || {}),
+      completedLearningIds: [...new Set([...(current?.completedLearningIds || []), id])],
+    }));
+    setError(null);
+  }
+
+  async function reopenLearningResource(resourceId) {
+    if (!user) throw new Error('Not authenticated');
+    if (typeof resourceId !== 'string' || !resourceId.trim()) {
+      throw new Error('A learning resource id is required.');
+    }
+    const id = resourceId.trim();
+    await markLearningResourceIncomplete(user.uid, id);
+    setProfile((current) => normalize({
+      ...(current || {}),
+      completedLearningIds: (current?.completedLearningIds || []).filter((completedId) => completedId !== id),
+    }));
+    setError(null);
+  }
+
   const needsOnboarding =
     !!user && !loading && !error && (!profile || !profile.onboardingCompleted);
 
@@ -146,6 +177,8 @@ export function ProfileProvider({ children }) {
     updateProfile,
     saveCareer,
     removeSavedCareer,
+    completeLearningResource,
+    reopenLearningResource,
     retryProfile,
   };
 

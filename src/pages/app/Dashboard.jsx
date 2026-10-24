@@ -22,6 +22,7 @@ export default function Dashboard() {
   const studyMinutes = Number(profile?.dailyStudyGoal) || 30;
   const interests = Array.isArray(profile?.interests) ? profile.interests : [];
   const savedCareerIds = Array.isArray(profile?.savedCareerIds) ? profile.savedCareerIds : [];
+  const completedLearningIds = Array.isArray(profile?.completedLearningIds) ? profile.completedLearningIds : [];
   const completeness = getProfileCompleteness(profile);
   const hasSuggestedSteps = completeness.missingSteps.length > 0;
 
@@ -128,13 +129,42 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <Section title="Other tools" subtitle="These areas are still being developed and are not represented as working services yet.">
+      <Section
+        title="Learning Hub"
+        subtitle="Track your progress through the curated starter catalogue."
+      >
+        <Card>
+          <CardBody className="p-5 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+              <div className="flex items-start gap-3">
+                <div className="h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 grid place-items-center">
+                  <BookOpen size={18} />
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold text-slate-900">Curated external resources</h3>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {completedLearningIds.length} resource{completedLearningIds.length === 1 ? '' : 's'} marked complete in your profile.
+                  </p>
+                  <p className="mt-1 text-xs text-slate-500">
+                    Completion is your own tracker, not a provider-verified certificate.
+                  </p>
+                </div>
+              </div>
+              <Button as={Link} to="/learning" variant="brand" rightIcon={ArrowRight}>
+                Open Learning Hub
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
+      </Section>
+
+      <Section title="Other tools" subtitle="These planned areas are not represented as working services yet.">
         <Card>
           <CardBody>
             <EmptyState
               icon={BookOpen}
-              title="Learning tools are in development"
-              description="Learning Hub, assessments, AI Mentor, scholarships, and opportunities will be added when their underlying content and services are ready."
+              title="More learning tools are in development"
+              description="Assessments, AI Mentor, scholarships, and opportunities will be added when their underlying content and services are ready."
             />
           </CardBody>
         </Card>
