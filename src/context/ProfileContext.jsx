@@ -87,12 +87,19 @@ export function ProfileProvider({ children }) {
     };
 
     await setUserProfile(user.uid, payload);
+    // Update context immediately so the route guard does not redirect back to
+    // onboarding while the Firestore snapshot update is still in flight.
+    setProfile(normalize(payload));
+    setError(null);
+    setLoading(false);
     return payload;
   }
 
   async function updateProfile(patch) {
     if (!user) throw new Error('Not authenticated');
     await setUserProfile(user.uid, patch);
+    setProfile(normalize({ ...(profile || {}), ...patch }));
+    setError(null);
   }
 
   const needsOnboarding =
