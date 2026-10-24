@@ -14,6 +14,7 @@ import { Progress } from '../../design-system/Progress';
 import { PageHeader, Section, Stat } from '../../components/layout/PageHeader';
 import { EmptyState } from '../../components/layout/EmptyState';
 import { getProfileCompleteness } from '../../utils/profileCompleteness';
+import { getLearningProgress, LEARNING_RESOURCES } from '../../features/learning/learningCatalog';
 
 export default function Dashboard() {
   const { profile } = useProfile();
@@ -23,6 +24,7 @@ export default function Dashboard() {
   const interests = Array.isArray(profile?.interests) ? profile.interests : [];
   const savedCareerIds = Array.isArray(profile?.savedCareerIds) ? profile.savedCareerIds : [];
   const completedLearningIds = Array.isArray(profile?.completedLearningIds) ? profile.completedLearningIds : [];
+  const completedLearningCount = getLearningProgress(LEARNING_RESOURCES, completedLearningIds).completed;
   const completeness = getProfileCompleteness(profile);
   const hasSuggestedSteps = completeness.missingSteps.length > 0;
 
@@ -143,7 +145,7 @@ export default function Dashboard() {
                 <div>
                   <h3 className="text-base font-semibold text-slate-900">Curated external resources</h3>
                   <p className="mt-1 text-sm text-slate-600">
-                    {completedLearningIds.length} resource{completedLearningIds.length === 1 ? '' : 's'} marked complete in your profile.
+                    {completedLearningCount} resource{completedLearningCount === 1 ? '' : 's'} marked complete in your profile.
                   </p>
                   <p className="mt-1 text-xs text-slate-500">
                     Completion is your own tracker, not a provider-verified certificate.

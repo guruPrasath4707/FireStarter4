@@ -26,7 +26,7 @@ test('curated resources have unique IDs, official source URLs, and provenance me
 
 test('search matches resource titles, provider names, and tags case-insensitively', () => {
   assert.deepEqual(
-    filterLearningResources(LEARNING_RESOURCES, { query: 'PYTHON' }).map((r) => r.id),
+    filterLearningResources(LEARNING_RESOURCES, { query: 'THE PYTHON TUTORIAL' }).map((r) => r.id),
     ['python-tutorial'],
   );
   assert.deepEqual(
